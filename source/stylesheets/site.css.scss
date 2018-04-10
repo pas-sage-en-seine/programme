@@ -1,0 +1,93 @@
+@import 'bootstrap';
+
+html {
+	box-sizing: border-box;
+}
+
+$line-height: 150px;
+
+$event-color-1: #577F92; // Smalt Blue
+$event-color-2: #443453; // Martinique
+$event-color-3: #A2B9B2; // Edward
+$event-color-4: #f6b067; // Rajah
+
+table.timetable {
+	table-layout: fixed;
+
+	tr {
+		th:first-child {
+			width: 50px;
+		}
+	}
+
+	thead {
+		th, td {
+			text-align: center;
+		}
+	}
+
+	ul {
+		list-style-type: none;
+		padding: 0;
+		margin: 0;
+
+		li {
+			height: $line-height;
+
+			&:not(:first-child) {
+				margin-top: 5px;
+			}
+		}
+	}
+
+	tbody {
+		td {
+			vertical-align: top;
+
+			&:not(:first-child) {
+				ul {
+					li {
+						padding: 10px;
+						color: #fff;
+
+						&.half {
+							height: $line-height/2;
+						}
+
+						&.double {
+							height: 2*$line-height;
+						}
+					}
+				}
+			}
+		}
+
+		.cinema {
+			background-color: $event-color-1;
+		}
+
+		.hall {
+			background-color: $event-color-2;
+		}
+
+		.town {
+			background-color: $event-color-4;
+		}
+
+		.time {
+			font-size: 0.75em;
+		}
+
+		.title {
+			font-weight: bold;
+		}
+
+		.author {
+			text-align: right;
+		}
+
+		.description {
+			display: none;
+		}
+	}
+}

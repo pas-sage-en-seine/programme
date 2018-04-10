@@ -1,0 +1,92 @@
+<%
+	planning = YAML.load File.read File.join Middleman::Application.root, 'config/2018.yml'
+
+	def parse_time(time)
+		hour, min = time.split ':'
+		60 * hour.to_i + min.to_i
+	end
+%>
+
+<div class="container-fluid">
+	<div class="row">
+		<table class="timetable table-bordered table-condensed col-xs-12">
+			<thead>
+			<tr>
+				<th></th>
+				<% planning.each do |day, events| %>
+					<%=
+						n = events.size
+						attributes = n == 1 ? nil : { colspan: n }
+						content_tag :th, day, attributes
+					%>
+				<% end %>
+			</tr>
+			<!--tr>
+				<% planning.each do |day, events| %>
+					<% events.each do |type, _| %>
+						<td><%= type %></td>
+					<% end %>
+				<% end %>
+			</tr-->
+			</thead>
+			<tbody>
+			<tr>
+				<td>
+					<ul>
+						<% (10..21).each do |hour| %>
+							<li data-time="<%= hour %>:00"><%= hour %>:00</li>
+						<% end %>
+					</ul>
+				</td>
+				<% planning.each do |_, events| %>
+					<% events.each do |_, events| %>
+						<td>
+							<ul>
+								<% (events || []).each do |event| %>
+									<%
+										from, to = event[:from], event[:to]
+										duration = parse_time(to) - parse_time(from)
+										classes = [event[:place]]
+										classes << :half if duration <= 30
+										classes << :double if duration >= 90
+										classes = classes.join ' '
+									%>
+									<% content_tag :li, class: classes, data: { from: from, to: to } do %>
+										<div class="time">
+											<%= from %> - <%= to %>
+										</div>
+										<div class="title">
+											<%= event[:title] %>
+										</div>
+										<div class="author">
+											<%= event[:author] %>
+										</div>
+										<div class="description">
+											<%= event[:description] %>
+										</div>
+									<% end %>
+								<% end %>
+							</ul>
+						</td>
+					<% end %>
+				<% end %>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<div class="modal">
+	<header class="header">
+		<div class="content">
+			<span class="date"></span>
+			<h3 class="name"></h3>
+		</div>
+		<div class="header-bg"></div>
+	</header>
+	<div class="body">
+		<div class="event-info"></div>
+		<div class="body-bg"></div>
+	</div>
+	<a href="#" class="close">Close</a>
+</div>

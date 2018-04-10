@@ -1,0 +1,35 @@
+<%=
+	require 'icalendar'
+
+	def merge(day, time)
+		hour, min = time.split ':'
+		date = DateTime.new day.year, day.month, day.mday, hour.to_i, min.to_i, 0, 'CEST'
+		Icalendar::Values::DateTime.new date
+	end
+
+	planning = YAML.load File.read File.join Middleman::Application.root, 'config/2018.yml'
+
+	cal = Icalendar::Calendar.new
+	cal.append_custom_property 'NAME', 'PSES 2018'
+
+	planning.each do |day, events|
+		events.each do |type, events|
+			events.each do |event|
+				from = event[:from]
+				to = event[:to]
+				title = event[:title]
+
+				cal.event do |e|
+					e.uid         = "urn:sha1:#{Digest::SHA1.hexdigest title}"
+					e.dtstart     = merge day, from
+					e.dtend       = merge day, to
+					e.organizer   = Icalendar::Values::CalAddress.new nil, cn: event[:author]
+					e.summary     = title
+					e.description = event[:description]
+					e.location    = event[:place].to_s
+				end
+			end
+		end
+	end
+	cal.to_ical
+%>

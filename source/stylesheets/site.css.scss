@@ -1,6 +1,6 @@
-@import 'bootstrap';
+// @import 'bootstrap';
 
-html {
+* {
 	box-sizing: border-box;
 }
 
@@ -11,12 +11,31 @@ $event-color-2: #443453; // Martinique
 $event-color-3: #A2B9B2; // Edward
 $event-color-4: #f6b067; // Rajah
 
+@mixin event($color) {
+	background-color: $color;
+	border-bottom: 5px solid darken($color, 5%);
+}
+
+@mixin transition($args...) {
+	-webkit-transition: $args;
+	-moz-transition: $args;
+	-o-transition: $args;
+	transition: $args;
+}
+
 table.timetable {
+	width: 100%;
+	border-collapse: collapse;
 	table-layout: fixed;
 
 	tr {
 		th:first-child {
 			width: 50px;
+		}
+
+		th, td {
+			padding: 5px;
+			border: 1px solid #aaa;
 		}
 	}
 
@@ -41,53 +60,140 @@ table.timetable {
 	}
 
 	tbody {
+		th {
+			font-size: 0.75em;
+		}
+
 		td {
 			vertical-align: top;
 
-			&:not(:first-child) {
-				ul {
-					li {
-						padding: 10px;
-						color: #fff;
+			ul {
+				li {
+					padding: 10px;
+					color: #fff;
+					cursor: pointer;
 
-						&.half {
-							height: $line-height/2;
-						}
+					&.half {
+						height: $line-height/2;
+					}
 
-						&.double {
-							height: 2*$line-height;
-						}
+					&.double {
+						height: 2*$line-height;
 					}
 				}
 			}
 		}
 
-		.cinema {
-			background-color: $event-color-1;
-		}
-
-		.hall {
-			background-color: $event-color-2;
-		}
-
-		.town {
-			background-color: $event-color-4;
-		}
-
-		.time {
-			font-size: 0.75em;
-		}
-
-		.title {
-			font-weight: bold;
-		}
-
-		.author {
-			text-align: right;
+		.hidden {
+			display: none;
 		}
 
 		.description {
 			display: none;
 		}
+	}
+}
+
+.time {
+	font-size: 0.75em;
+}
+
+.title {
+	font-weight: bold;
+}
+
+.author {
+	text-align: right;
+}
+
+.hidden {
+	display: none;
+}
+
+.cinema {
+	@include event($event-color-1);
+}
+
+.hall {
+	@include event($event-color-2);
+}
+
+.town {
+	@include event($event-color-4);
+}
+
+.modal {
+	position: absolute;
+	background-color: #fff;
+	display: flex;
+
+	&.hidden {
+		visibility: hidden;
+	}
+
+	.header {
+		height: 100%;
+		padding: 10px;
+		color: #fff;
+	}
+
+	.body {
+		height: 100%;
+		padding: 30px;
+		flex-grow: 1;
+		background-color: #fff;
+	}
+
+	&.transition {
+		&, .header, .body {
+			@include transition(width 500ms ease-in-out, height 500ms ease-in-out);
+		}
+	}
+
+	.close {
+		position: absolute;
+		top: 0;
+		right: 0;
+		color: transparent;
+		white-space: nowrap;
+		text-indent: 100%;
+		height: 30px;
+		width: 30px;
+		cursor: pointer;
+
+		&::before, &::after {
+			content: '';
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			width: 2px;
+			height: 15px;
+			background: #000;
+			-webkit-backface-visibility: hidden;
+			backface-visibility: hidden;
+		}
+
+		&::before {
+			transform: translateX(-50%) translateY(-50%) rotate(45deg);
+		}
+
+		&::after {
+			transform: translateX(-50%) translateY(-50%) rotate(-45deg);
+		}
+	}
+
+	.header, .body, .close {
+		z-index: 3;
+	}
+
+	.cover {
+		position: fixed;
+		z-index: 2;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-color: rgba(0, 0, 0, .8);
+		transition: visibility 500ms;
 	}
 }

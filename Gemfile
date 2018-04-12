@@ -14,3 +14,5 @@ gem 'icalendar'
 
 gem 'tzinfo-data', platforms: %i[mswin mingw jruby]
 gem 'wdm', platforms: %i[mswin mingw]
+
+gem 'betterlorem'

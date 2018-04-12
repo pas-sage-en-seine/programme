@@ -34,6 +34,7 @@ GEM
       execjs
     awesome_print (1.8.0)
     backports (3.11.1)
+    betterlorem (0.1.2)
     bootstrap-sass (3.3.7)
       autoprefixer-rails (>= 5.2.1)
       sass (>= 3.3.4)
@@ -176,6 +177,7 @@ PLATFORMS
 DEPENDENCIES
   actionmailer
   awesome_print
+  betterlorem
   bootstrap-sass
   icalendar
   middleman (~> 4.2)

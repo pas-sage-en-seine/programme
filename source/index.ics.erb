@@ -7,7 +7,7 @@
 		Icalendar::Values::DateTime.new date
 	end
 
-	planning = YAML.load File.read File.join Middleman::Application.root, 'config/2018.yml'
+	planning = YAML.load File.read File.join Middleman::Application.root, 'config/current.yml'
 
 	cal = Icalendar::Calendar.new
 	cal.append_custom_property 'NAME', 'PSES 2018'

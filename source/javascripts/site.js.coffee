@@ -1,5 +1,11 @@
 class TimeTable
-	constructor: (@element) ->
+	constructor: (@element, @modal) ->
+		events = @element.querySelectorAll 'tbody td li'
+		for event in events
+			# JS scoping hell…
+			event.addEventListener 'click', ((_this, _event) ->
+				-> _this.modal.open _event
+			)(this, event)
 
 	parse_time: (time) ->
 		time = time.split ':'
@@ -23,7 +29,7 @@ class TimeTable
 
 		ratio = (time - from.time) / (to.time - from.time)
 		top = from.top + (to.top - from.top) * ratio
-		Math.round top
+		top
 
 	position: (times, element) ->
 		from = @parse_time element.dataset.from
@@ -36,7 +42,7 @@ class TimeTable
 		bottom = @prorate including_to, to
 
 		root = element.parentElement
-		width = root.clientWidth
+		width = root.offsetWidth
 
 		element.style.top = "#{top}px"
 		element.style.height = "#{bottom - top}px"
@@ -46,7 +52,7 @@ class TimeTable
 	init: ->
 		times = []
 
-		hours = @element.querySelectorAll 'tbody td:first-child li'
+		hours = @element.querySelectorAll 'tbody th li'
 		for hour in hours
 			time = @parse_time hour.dataset.time
 			times.push {
@@ -61,18 +67,81 @@ class TimeTable
 			top: rect.top + rect.height
 		}
 
-		events = @element.querySelectorAll 'tbody td:not(:first-child) li'
+		events = @element.querySelectorAll 'tbody td li'
 		for event in events
 			@position times, event
 
+class Modal
+	size: { width: 800, height: 480 }
+
+	constructor: (@modal) ->
+		@header = @modal.querySelector '.header'
+		@body = @modal.querySelector '.body'
+		close = => @modal.classList.add 'hidden'
+		@modal.querySelector('.close').addEventListener 'click', close
+		@modal.querySelector('.cover').addEventListener 'click', close
+
+	open: (@event) ->
+		start = @event.getBoundingClientRect()
+		scroll = {
+			top: window.pageYOffset,
+			left: window.pageXOffset
+		}
+
+		modal =
+			width: Math.round window.innerWidth * .8
+			height: Math.round window.innerHeight * .8
+		modal =
+			width: Math.min modal.width, @size.width
+			height: Math.min modal.height, @size.height
+		modal.top = Math.round (window.innerHeight - modal.height) / 2 + scroll.top
+		modal.left = Math.round (window.innerWidth - modal.width) / 2 + scroll.left
+
+		header_width = Math.round modal.width / 3
+
+		@modal.style.top = "#{start.top + scroll.top}px"
+		@modal.style.left = "#{start.left + scroll.left}px"
+		@modal.style.width = "#{start.width}px"
+		@modal.style.height = "#{start.height}px"
+		@header.style.width = "#{start.width}px"
+		@header.style.height = "#{start.height}px"
+		@body.style.width = '0px'
+		@body.style.height = "#{start.height}px"
+
+		time = @event.querySelector('.time').textContent
+		@header.querySelector('.time').textContent = time
+		title = @event.querySelector('.title').textContent
+		@header.querySelector('.title').textContent = title
+		author = @event.querySelector('.author').textContent
+		@header.querySelector('.author').textContent = author
+		description = @event.querySelector('.description').textContent
+		@body.textContent = ''
+		@header.classList = @event.classList
+		@header.classList.add 'header'
+		@modal.classList.remove 'hidden'
+		@modal.classList.add 'transition'
+
+		@modal.style.top = "#{modal.top}px"
+		@modal.style.left = "#{modal.left}px"
+		@modal.style.width = "#{modal.width}px"
+		@modal.style.height = "#{modal.height}px"
+		@header.style.width = "#{header_width}px"
+		@header.style.height = "#{modal.height}px"
+		@body.style.width = "#{modal.height - header_width}px"
+		@body.style.height = "#{modal.height}px"
+
+		@body.textContent = description
+
+		@modal.addEventListener 'transitionend', =>
+			@modal.removeEventListener 'transitionend', this
+			@modal.classList.remove 'transition'
+
 init = ->
+	modal = new Modal document.querySelector '.modal'
+
 	tables = document.querySelectorAll 'table.timetable'
 	for table in tables
-		new TimeTable(table).init()
-
+		new TimeTable(table, modal).init()
 
 document.addEventListener 'DOMContentLoaded', init
 window.addEventListener 'resize', init
-
-
-

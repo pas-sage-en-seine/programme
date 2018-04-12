@@ -6,10 +6,9 @@
 
 $line-height: 150px;
 
-$event-color-1: #577F92; // Smalt Blue
-$event-color-2: #443453; // Martinique
-$event-color-3: #A2B9B2; // Edward
-$event-color-4: #f6b067; // Rajah
+$event-color-1: #2980b9; // Smalt Blue
+$event-color-2: #c0392b; // Martinique
+$event-color-3: #27ae60; // Rajah
 
 @mixin event($color) {
 	background-color: $color;
@@ -53,7 +52,7 @@ table.timetable {
 		li {
 			height: $line-height;
 
-			&:not(:first-child) {
+			& {
 				margin-top: 5px;
 			}
 		}
@@ -119,7 +118,7 @@ table.timetable {
 }
 
 .town {
-	@include event($event-color-4);
+	@include event($event-color-3);
 }
 
 .modal {
@@ -128,7 +127,7 @@ table.timetable {
 	display: flex;
 
 	&.hidden {
-		visibility: hidden;
+		display: none;
 	}
 
 	.header {
@@ -139,14 +138,20 @@ table.timetable {
 
 	.body {
 		height: 100%;
-		padding: 30px;
+		padding: 30px 30px 30px 10px;
 		flex-grow: 1;
 		background-color: #fff;
+
+		overflow-x: auto;
 	}
 
 	&.transition {
 		&, .header, .body {
-			@include transition(width 500ms ease-in-out, height 500ms ease-in-out);
+			@include transition(all 500ms ease-in-out);
+		}
+
+		.body {
+			padding: 0;
 		}
 	}
 
@@ -194,6 +199,5 @@ table.timetable {
 		width: 100%;
 		height: 100%;
 		background-color: rgba(0, 0, 0, .8);
-		transition: visibility 500ms;
 	}
 }

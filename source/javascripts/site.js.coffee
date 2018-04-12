@@ -44,7 +44,7 @@ class TimeTable
 		root = element.parentElement
 		width = root.offsetWidth
 
-		element.style.top = "#{top}px"
+		element.style.top = "#{top + window.pageYOffset}px"
 		element.style.height = "#{bottom - top}px"
 		element.style.width = "#{width}px"
 		element.style.position = 'absolute'
@@ -77,12 +77,37 @@ class Modal
 	constructor: (@modal) ->
 		@header = @modal.querySelector '.header'
 		@body = @modal.querySelector '.body'
-		close = => @modal.classList.add 'hidden'
-		@modal.querySelector('.close').addEventListener 'click', close
-		@modal.querySelector('.cover').addEventListener 'click', close
+		@modal.querySelector('.close').addEventListener 'click', @close
+		@modal.querySelector('.cover').addEventListener 'click', @close
+
+	act: (events) ->
+		wrapper = =>
+			next = events.shift()
+			return unless next?
+			[duration, callback] = next
+			setTimeout (=>
+				callback()
+				wrapper()
+			), duration
+		wrapper()
+
+	start: ->
+		start = @event.getBoundingClientRect()
+		scroll = {
+			top: window.pageYOffset,
+			left: window.pageXOffset
+		}
+
+		@modal.style.top = "#{start.top + scroll.top}px"
+		@modal.style.left = "#{start.left + scroll.left}px"
+		@modal.style.width = "#{start.width}px"
+		@modal.style.height = "#{start.height}px"
+		@header.style.width = "#{start.width}px"
+		@header.style.height = "#{start.height}px"
+		@body.style.width = 0
+		@body.style.height = "#{start.height}px"
 
 	open: (@event) ->
-		start = @event.getBoundingClientRect()
 		scroll = {
 			top: window.pageYOffset,
 			left: window.pageXOffset
@@ -99,15 +124,6 @@ class Modal
 
 		header_width = Math.round modal.width / 3
 
-		@modal.style.top = "#{start.top + scroll.top}px"
-		@modal.style.left = "#{start.left + scroll.left}px"
-		@modal.style.width = "#{start.width}px"
-		@modal.style.height = "#{start.height}px"
-		@header.style.width = "#{start.width}px"
-		@header.style.height = "#{start.height}px"
-		@body.style.width = '0px'
-		@body.style.height = "#{start.height}px"
-
 		time = @event.querySelector('.time').textContent
 		@header.querySelector('.time').textContent = time
 		title = @event.querySelector('.title').textContent
@@ -116,25 +132,53 @@ class Modal
 		@header.querySelector('.author').textContent = author
 		description = @event.querySelector('.description').textContent
 		@body.textContent = ''
-		@header.classList = @event.classList
-		@header.classList.add 'header'
-		@modal.classList.remove 'hidden'
-		@modal.classList.add 'transition'
 
-		@modal.style.top = "#{modal.top}px"
-		@modal.style.left = "#{modal.left}px"
-		@modal.style.width = "#{modal.width}px"
-		@modal.style.height = "#{modal.height}px"
-		@header.style.width = "#{header_width}px"
-		@header.style.height = "#{modal.height}px"
-		@body.style.width = "#{modal.height - header_width}px"
-		@body.style.height = "#{modal.height}px"
+		@modal.classList.remove 'transition'
+		@act [
+			[20, =>
+				@start()
+				@header.classList = @event.classList
+				@header.classList.add 'header'
+				@modal.style.opacity = 1
+				@modal.classList.remove 'hidden'
+			],
+			[20, =>
+				@transition @modal, null, =>
+					@body.textContent = description
 
-		@body.textContent = description
+				@modal.style.top = "#{modal.top}px"
+				@modal.style.left = "#{modal.left}px"
+				@modal.style.width = "#{modal.width}px"
+				@modal.style.height = "#{modal.height}px"
+				@header.style.width = "#{header_width}px"
+				@header.style.height = "#{modal.height}px"
+				@body.style.width = "#{modal.height - header_width}px"
+				@body.style.height = "#{modal.height}px"
+			]
+		]
 
-		@modal.addEventListener 'transitionend', =>
-			@modal.removeEventListener 'transitionend', this
-			@modal.classList.remove 'transition'
+	close: =>
+		@act [
+			[20, =>
+				@transition @modal, null, =>
+					@modal.classList.add 'hidden'
+
+				@body.textContent = ''
+				@start()
+			]
+		]
+
+	transition: (element, events, at_end) ->
+		element.classList.add 'transition'
+
+		callback = ->
+			element.removeEventListener 'transitionend', callback
+			element.classList.remove 'transition'
+			at_end() if at_end?
+
+		element.addEventListener 'transitionend', callback
+		@act events if events?
+
 
 init = ->
 	modal = new Modal document.querySelector '.modal'

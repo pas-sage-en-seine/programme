@@ -11,6 +11,7 @@ gem 'pry-byebug'
 
 gem 'actionmailer'
 gem 'icalendar'
+gem 'redcarpet'
 
 gem 'tzinfo-data', platforms: %i[mswin mingw jruby]
 gem 'wdm', platforms: %i[mswin mingw]

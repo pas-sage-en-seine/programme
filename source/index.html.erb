@@ -1,4 +1,8 @@
 <%
+	require 'redcarpet'
+	render = Redcarpet::Render::HTML
+	markdown = Redcarpet::Markdown.new render, autolink: true
+
 	planning = YAML.load File.read File.join Middleman::Application.root, 'config/current.yml'
 
 	def parse_time(time)
@@ -62,7 +66,10 @@
 											<%= event[:author] %>
 										</div>
 										<div class="description">
-											<%= event[:description] %>
+											<%=
+												description = event[:description]
+												markdown.render description if description
+											%>
 										</div>
 									<% end %>
 								<% end %>

@@ -130,8 +130,8 @@ class Modal
 		@header.querySelector('.title').textContent = title
 		author = @event.querySelector('.author').textContent
 		@header.querySelector('.author').textContent = author
-		description = @event.querySelector('.description').textContent
-		@body.textContent = ''
+		description = @event.querySelector('.description').innerHTML
+		@body.innerHTML = ''
 
 		@modal.classList.remove 'transition'
 		@act [
@@ -144,7 +144,7 @@ class Modal
 			],
 			[20, =>
 				@transition @modal, null, =>
-					@body.textContent = description
+					@body.innerHTML = description
 
 				@modal.style.top = "#{modal.top}px"
 				@modal.style.left = "#{modal.left}px"
@@ -163,7 +163,7 @@ class Modal
 				@transition @modal, null, =>
 					@modal.classList.add 'hidden'
 
-				@body.textContent = ''
+				@body.innerHTML = ''
 				@start()
 			]
 		]

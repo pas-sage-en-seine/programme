@@ -1,6 +1,6 @@
 class TimeTable
 	constructor: (@element, @modal) ->
-		events = @element.querySelectorAll 'tbody td li'
+		events = @element.querySelectorAll 'tbody td > ul > li'
 		for event in events
 			# JS scoping hell…
 			event.addEventListener 'click', ((_this, _event) ->
@@ -52,7 +52,7 @@ class TimeTable
 	init: ->
 		times = []
 
-		hours = @element.querySelectorAll 'tbody th li'
+		hours = @element.querySelectorAll 'tbody th > ul > li'
 		for hour in hours
 			time = @parse_time hour.dataset.time
 			times.push {
@@ -67,7 +67,7 @@ class TimeTable
 			top: rect.top + rect.height
 		}
 
-		events = @element.querySelectorAll 'tbody td li'
+		events = @element.querySelectorAll 'tbody td > ul > li'
 		for event in events
 			@position times, event
 

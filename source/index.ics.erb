@@ -12,8 +12,14 @@
 	cal = Icalendar::Calendar.new
 	cal.append_custom_property 'NAME', 'PSES 2018'
 
+	LOCATIONS = {
+			cinema: 'Salle cinéma',
+			hall: 'Accueil',
+			town: 'Village asso'
+	}
+
 	planning.each do |day, events|
-		events.each do |type, events|
+		events.each do |location, events|
 			events.each do |event|
 				from = event[:from]
 				to = event[:to]
@@ -26,7 +32,7 @@
 					e.organizer   = Icalendar::Values::CalAddress.new nil, cn: event[:author]
 					e.summary     = title
 					e.description = event[:description]
-					e.location    = event[:place].to_s
+					e.location    = LOCATIONS[location]
 				end
 			end
 		end

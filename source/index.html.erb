@@ -16,22 +16,54 @@
 		<table class="timetable table-bordered table-condensed col-xs-12">
 			<thead>
 			<tr>
-				<th></th>
+				<th rowspan="2">
+					<% link_to 'index.ics' do %>
+						<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+							 viewBox="0 0 60 60" style="enable-background:new 0 0 60 60;" xml:space="preserve">
+							<g>
+								<g>
+									<rect x="1" y="13" style="fill:#ECF0F1;" width="56" height="39"/>
+									<polygon style="fill:#21AE5E;" points="42,0 16,0 1,0 1,13 57,13 57,0 		"/>
+									<path style="fill:#556080;" d="M19,46c-0.552,0-1-0.447-1-1V19c0-0.553,0.448-1,1-1s1,0.447,1,1v26C20,45.553,19.552,46,19,46z"/>
+									<path style="fill:#556080;" d="M13,26c-0.256,0-0.512-0.098-0.707-0.293c-0.391-0.391-0.391-1.023,0-1.414l6-6
+									c0.391-0.391,1.023-0.391,1.414,0s0.391,1.023,0,1.414l-6,6C13.512,25.902,13.256,26,13,26z"/>
+									<path style="fill:#556080;" d="M38,32c-3.86,0-7-3.141-7-7s3.14-7,7-7s7,3.141,7,7S41.86,32,38,32z M38,20c-2.757,0-5,2.243-5,5
+									s2.243,5,5,5s5-2.243,5-5S40.757,20,38,20z"/>
+									<path style="fill:#556080;" d="M38,46c-3.86,0-7-3.141-7-7c0-0.553,0.448-1,1-1s1,0.447,1,1c0,2.757,2.243,5,5,5s5-2.243,5-5V25
+									c0-0.553,0.448-1,1-1s1,0.447,1,1v14C45,42.859,41.86,46,38,46z"/>
+								</g>
+								<g>
+									<rect x="37" y="38" style="fill:#21AE5E;" width="22" height="22"/>
+									<rect x="47" y="39.586" style="fill:#FFFFFF;" width="2" height="16"/>
+									<polygon style="fill:#FFFFFF;" points="48,57 41,50.293 42.476,48.879 48,54.172 53.524,48.879 55,50.293 		"/>
+								</g>
+							</g>
+						</svg>
+					<% end %>
+				</th>
 				<% planning.each do |day, events| %>
 					<%=
 						n = events.size
 						attributes = n == 1 ? nil : { colspan: n }
-						content_tag :th, day, attributes
+						content_tag :th, I18n.l(day, format: '%A %d %B'), attributes
 					%>
 				<% end %>
 			</tr>
-			<!--tr>
-				<% planning.each do |day, events| %>
-					<% events.each do |type, _| %>
-						<td><%= type %></td>
+			<tr>
+				<% planning.each do |_, events| %>
+					<% events.each do |location, _| %>
+						<td><%= case location
+								when :cinema
+									'Salle cinéma'
+								when :hall
+									'Accueil'
+								when :town
+									'Village asso'
+								end
+						%></td>
 					<% end %>
 				<% end %>
-			</tr-->
+			</tr>
 			</thead>
 			<tbody>
 			<tr>
@@ -50,7 +82,7 @@
 									<%
 										from, to = event[:from], event[:to]
 										duration = parse_time(to) - parse_time(from)
-										classes = [event[:place]]
+										classes = [event[:type]]
 										classes << :half if duration <= 30
 										classes << :double if duration >= 90
 										classes = classes.join ' '
@@ -80,6 +112,23 @@
 			</tr>
 			</tbody>
 		</table>
+		<ul class="legend">
+			<li>
+				<span class="talk">&nbsp;</span> Conférence
+			</li>
+			<li>
+				<span class="workshop">&nbsp;</span> Atelier
+			</li>
+			<li>
+				<span class="round-table">&nbsp;</span> Table ronde
+			</li>
+			<li>
+				<span class="concert">&nbsp;</span> Concert
+			</li>
+			<li>
+				<span class="misc">&nbsp;</span> Divers
+			</li>
+		</ul>
 	</div>
 </div>
 

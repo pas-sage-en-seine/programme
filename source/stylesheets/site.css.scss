@@ -1,18 +1,32 @@
-// @import 'bootstrap';
-
 * {
 	box-sizing: border-box;
 }
 
 $line-height: 150px;
 
-$event-color-1: #2980b9; // Smalt Blue
-$event-color-2: #c0392b; // Martinique
-$event-color-3: #27ae60; // Rajah
+$background: #212121;
+$background: #000;
+
+$event-talk: #3F51B5;
+$event-workshop: #f44336;
+$event-concert: #4CAF50;
+$event-round-table: #FFC107;
+$event-misc: #673AB7;
+
+//$event-talk: #2962FF;
+//$event-workshop: #DD2C00;
+//$event-concert: #00C853;
+//$event-round-table: #FF6D00;
+//$event-misc: #6200EA;
+
+$event-talk: #2980b9;
+$event-workshop: #c0392b;
+$event-concert: #27ae60;
+$event-round-table: #FFC107;
 
 @mixin event($color) {
 	background-color: $color;
-	border-bottom: 5px solid darken($color, 5%);
+	border-bottom: 5px solid darken($color, 15%);
 }
 
 @mixin transition($args...) {
@@ -20,6 +34,12 @@ $event-color-3: #27ae60; // Rajah
 	-moz-transition: $args;
 	-o-transition: $args;
 	transition: $args;
+}
+
+body {
+	background-color: $background;
+	color: #fff;
+	font-size: 10pt;
 }
 
 table.timetable {
@@ -41,6 +61,11 @@ table.timetable {
 	thead {
 		th, td {
 			text-align: center;
+		}
+
+		svg {
+			width: 30px;
+			height: 30px;
 		}
 	}
 
@@ -69,8 +94,9 @@ table.timetable {
 			ul {
 				li {
 					padding: 10px;
-					color: #fff;
 					cursor: pointer;
+					text-align: justify;
+					overflow: hidden;
 
 					&.half {
 						height: $line-height/2;
@@ -93,6 +119,18 @@ table.timetable {
 	}
 }
 
+ul.legend {
+	list-style-type: none;
+	li {
+		display: inline;
+
+		span {
+			display: inline-block;
+			width: 25px;
+		}
+	}
+}
+
 .time {
 	font-size: 0.75em;
 }
@@ -109,16 +147,24 @@ table.timetable {
 	display: none;
 }
 
-.cinema {
-	@include event($event-color-1);
+.talk {
+	@include event($event-talk);
 }
 
-.hall {
-	@include event($event-color-2);
+.workshop {
+	@include event($event-workshop);
 }
 
-.town {
-	@include event($event-color-3);
+.concert {
+	@include event($event-concert);
+}
+
+.round-table {
+	@include event($event-round-table);
+}
+
+.misc {
+	@include event($event-misc);
 }
 
 .modal {
@@ -133,16 +179,21 @@ table.timetable {
 	.header {
 		height: 100%;
 		padding: 10px;
-		color: #fff;
+		text-align: justify;
 	}
 
 	.body {
+		color: #000;
 		height: 100%;
 		padding: 30px 30px 30px 10px;
 		flex-grow: 1;
 		background-color: #fff;
-
+		text-align: justify;
 		overflow-x: auto;
+
+		p {
+			margin: 0;
+		}
 	}
 
 	&.transition {
@@ -171,19 +222,18 @@ table.timetable {
 			position: absolute;
 			top: 50%;
 			left: 50%;
-			width: 2px;
-			height: 15px;
-			background: #000;
+			width: 30px;
+			height: 30px;
 			-webkit-backface-visibility: hidden;
 			backface-visibility: hidden;
 		}
 
 		&::before {
-			transform: translateX(-50%) translateY(-50%) rotate(45deg);
-		}
-
-		&::after {
-			transform: translateX(-50%) translateY(-50%) rotate(-45deg);
+			-webkit-transform: translateX(-50%) translateY(-50%);
+			background-position: center;
+			background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='20px' height='20px' viewBox='0 0 20 20' zoomAndPan='disable'%3E%3Cstyle%3Eline %7B stroke: %23000%3B stroke-width: 1%3B %7D%3C/style%3E%3Cline x1='2' y1='2' x2='18' y2='18' /%3E%3Cline x1='18' y1='2' x2='2' y2='18' /%3E%3C/svg%3E");
+			background-size: 20px 20px;
+			background-repeat: no-repeat;
 		}
 	}
 

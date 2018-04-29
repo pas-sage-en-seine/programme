@@ -18,7 +18,7 @@
 			<tr>
 				<th rowspan="2">
 					<% link_to 'index.ics' do %>
-						<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+						<svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
 							 viewBox="0 0 60 60" style="enable-background:new 0 0 60 60;" xml:space="preserve">
 							<g>
 								<g>
@@ -45,14 +45,20 @@
 					<%=
 						n = events.size
 						attributes = n == 1 ? nil : { colspan: n }
-						content_tag :th, I18n.l(day, format: '%A %d %B'), attributes
+						content_tag :th, attributes do
+							content = I18n.l day, format: '%A %d %B'
+							content += '<br/>Journée spéciale RGPD' if day == Date.new(2018, 6, 29)
+							content
+						end
 					%>
 				<% end %>
 			</tr>
 			<tr>
 				<% planning.each do |_, events| %>
 					<% events.each do |location, _| %>
-						<td><%= case location
+						<td>
+
+							<%= case location
 								when :cinema
 									'Salle cinéma'
 								when :hall
@@ -60,7 +66,8 @@
 								when :town
 									'Village asso'
 								end
-						%></td>
+							%>
+						</td>
 					<% end %>
 				<% end %>
 			</tr>

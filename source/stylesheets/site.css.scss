@@ -144,10 +144,6 @@ ul.legend {
 	text-align: right;
 }
 
-.hidden {
-	display: none;
-}
-
 .talk {
 	@include event($event-talk);
 }
@@ -166,6 +162,37 @@ ul.legend {
 
 .misc {
 	@include event($event-misc);
+}
+
+.close {
+	position: absolute;
+	top: 0;
+	right: 0;
+	color: transparent;
+	white-space: nowrap;
+	text-indent: 100%;
+	height: 30px;
+	width: 30px;
+	cursor: pointer;
+
+	&::before, &::after {
+		content: '';
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		width: 30px;
+		height: 30px;
+		-webkit-backface-visibility: hidden;
+		backface-visibility: hidden;
+	}
+
+	&::before {
+		-webkit-transform: translateX(-50%) translateY(-50%);
+		background-position: center;
+		background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='20px' height='20px' viewBox='0 0 20 20' zoomAndPan='disable'%3E%3Cstyle%3Eline %7B stroke: %23000%3B stroke-width: 1%3B %7D%3C/style%3E%3Cline x1='2' y1='2' x2='18' y2='18' /%3E%3Cline x1='18' y1='2' x2='2' y2='18' /%3E%3C/svg%3E");
+		background-size: 20px 20px;
+		background-repeat: no-repeat;
+	}
 }
 
 .modal {
@@ -207,37 +234,6 @@ ul.legend {
 		}
 	}
 
-	.close {
-		position: absolute;
-		top: 0;
-		right: 0;
-		color: transparent;
-		white-space: nowrap;
-		text-indent: 100%;
-		height: 30px;
-		width: 30px;
-		cursor: pointer;
-
-		&::before, &::after {
-			content: '';
-			position: absolute;
-			top: 50%;
-			left: 50%;
-			width: 30px;
-			height: 30px;
-			-webkit-backface-visibility: hidden;
-			backface-visibility: hidden;
-		}
-
-		&::before {
-			-webkit-transform: translateX(-50%) translateY(-50%);
-			background-position: center;
-			background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='20px' height='20px' viewBox='0 0 20 20' zoomAndPan='disable'%3E%3Cstyle%3Eline %7B stroke: %23000%3B stroke-width: 1%3B %7D%3C/style%3E%3Cline x1='2' y1='2' x2='18' y2='18' /%3E%3Cline x1='18' y1='2' x2='2' y2='18' /%3E%3C/svg%3E");
-			background-size: 20px 20px;
-			background-repeat: no-repeat;
-		}
-	}
-
 	.header, .body, .close {
 		z-index: 3;
 	}
@@ -250,5 +246,23 @@ ul.legend {
 		width: 100%;
 		height: 100%;
 		background-color: rgba(0, 0, 0, .8);
+	}
+}
+
+.giggity {
+	& .logo {
+		cursor: pointer;
+	}
+
+	& .qrcode {
+		position: absolute;
+		z-index: 3;
+		opacity: 1;
+
+		@include transition(all 500ms ease-in-out);
+
+		&.hidden {
+			opacity: 0;
+		}
 	}
 }

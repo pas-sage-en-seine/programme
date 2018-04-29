@@ -18,9 +18,11 @@
 			<tr>
 				<th rowspan="2">
 					<% link_to 'index.ics' do %>
-						<svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
-							 viewBox="0 0 60 60" style="enable-background:new 0 0 60 60;" xml:space="preserve">
+						<svg version="1.1" xmlns="http://www.w3.org/2000/svg"
+							x="0px" y="0px"
+							viewBox="0 0 60 60" style="enable-background:new 0 0 60 60;" xml:space="preserve">
 							<g>
+								<title>Calendrier</title>
 								<g>
 									<rect x="1" y="13" style="fill:#ECF0F1;" width="56" height="39"/>
 									<polygon style="fill:#21AE5E;" points="42,0 16,0 1,0 1,13 57,13 57,0 		"/>
@@ -40,6 +42,10 @@
 							</g>
 						</svg>
 					<% end %>
+					<div class="giggity">
+						<%= image_tag 'giggity.png', alt: 'Giggity', title: 'Giggity', class: 'logo' %>
+						<%= image_tag 'qrcode.png', class: 'qrcode hidden' %>
+					</div>
 				</th>
 				<% planning.each do |day, events| %>
 					<%=

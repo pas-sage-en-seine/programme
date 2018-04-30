@@ -256,13 +256,15 @@ ul.legend {
 
 	& .qrcode {
 		position: absolute;
-		z-index: 3;
+		z-index: 2;
 		opacity: 1;
+		visibility: visible;
 
 		@include transition(all 500ms ease-in-out);
 
 		&.hidden {
 			opacity: 0;
+			visibility: hidden;
 		}
 	}
 }

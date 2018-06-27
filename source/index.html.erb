@@ -53,7 +53,7 @@
 						attributes = n == 1 ? nil : { colspan: n }
 						content_tag :th, attributes do
 							content = I18n.l day, format: '%A %d %B'
-							content += '<br/>Journée spéciale RGPD' if day == Date.new(2018, 6, 29)
+							content += '<br/>Journée spéciale protection des données personnelles' if day == Date.new(2018, 6, 29)
 							content
 						end
 					%>
@@ -71,6 +71,8 @@
 									'Accueil'
 								when :town
 									'Village asso'
+								when :young
+									'Espace jeunesse'
 								end
 							%>
 						</td>
@@ -137,6 +139,9 @@
 			</li>
 			<li>
 				<span class="concert">&nbsp;</span> Concert
+			</li>
+			<li>
+				<span class="young">&nbsp;</span> Animations
 			</li>
 			<li>
 				<span class="misc">&nbsp;</span> Divers

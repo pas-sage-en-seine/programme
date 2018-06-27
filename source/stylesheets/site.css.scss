@@ -22,8 +22,9 @@ $background: #212121;
 $event-talk: #2980b9;
 $event-workshop: #c0392b;
 $event-concert: #27ae60;
-$event-round-table: #FFC107;
+$event-round-table: #283593;
 $event-misc: #673AB7;
+$event-young: #EF6C00;
 
 @mixin event($color) {
 	background-color: $color;
@@ -162,6 +163,10 @@ ul.legend {
 
 .misc {
 	@include event($event-misc);
+}
+
+.young {
+	@include event($event-young);
 }
 
 .close {

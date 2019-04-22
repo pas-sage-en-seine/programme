@@ -3,7 +3,8 @@
 	render = Redcarpet::Render::HTML
 	markdown = Redcarpet::Markdown.new render, autolink: true
 
-	planning = YAML.load File.read File.join Middleman::Application.root, 'config/current.yml'
+	planning = YAML.load(File.read File.join Middleman::Application.root, 'config/current.yml')
+					.deep_symbolize_keys
 
 	def parse_time(time)
 		hour, min = time.split ':'
@@ -42,19 +43,17 @@
 							</g>
 						</svg>
 					<% end %>
-					<div class="giggity">
+					<!--div class="giggity">
 						<%= image_tag 'giggity.png', alt: 'Giggity', title: 'Giggity', class: 'logo' %>
 						<%= image_tag 'qrcode.png', class: 'qrcode hidden' %>
-					</div>
+					</div-->
 				</th>
 				<% planning.each do |day, events| %>
 					<%=
 						n = events.size
 						attributes = n == 1 ? nil : { colspan: n }
 						content_tag :th, attributes do
-							content = I18n.l day, format: '%A %d %B'
-							content += '<br/>Journée spéciale protection des données personnelles' if day == Date.new(2018, 6, 29)
-							content
+							I18n.l day, format: '%A %d %B'
 						end
 					%>
 				<% end %>
@@ -64,7 +63,7 @@
 					<% events.each do |location, _| %>
 						<td>
 
-							<%= case location
+							<%= case location.to_sym
 								when :cinema
 									'Salle cinéma'
 								when :hall
@@ -90,10 +89,13 @@
 					</ul>
 				</th>
 				<% planning.each do |_, events| %>
-					<% events.each do |_, events| %>
+					<% events.each do |_, events|
+						events ||= []
+						events.sort! { |a, b| parse_time(a[:from]) <=> parse_time(b[:from]) }
+					%>
 						<td>
 							<ul>
-								<% (events || []).each do |event| %>
+								<% events.each do |event| %>
 									<%
 										from, to = event[:from], event[:to]
 										duration = parse_time(to) - parse_time(from)
@@ -134,7 +136,7 @@
 			<li>
 				<span class="workshop">&nbsp;</span> Atelier
 			</li>
-			<li>
+			<!-- <li>
 				<span class="round-table">&nbsp;</span> Table ronde
 			</li>
 			<li>
@@ -142,7 +144,7 @@
 			</li>
 			<li>
 				<span class="young">&nbsp;</span> Animations
-			</li>
+			</li> -->
 			<li>
 				<span class="misc">&nbsp;</span> Divers
 			</li>

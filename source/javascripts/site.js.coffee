@@ -32,8 +32,8 @@ class TimeTable
 		top
 
 	position: (times, element) ->
-		from = @parse_time element.dataset.from
-		to = @parse_time element.dataset.to
+		from = @parse_time(element.dataset.from)
+		to = @parse_time(element.dataset.to) - 5
 
 		including_from = @find_including times, from
 		including_to = @find_including times, to

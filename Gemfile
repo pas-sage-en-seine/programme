@@ -4,6 +4,7 @@ gem 'middleman', '~> 4.2'
 gem 'middleman-autoprefixer'
 gem 'middleman-livereload'
 gem 'middleman-sprockets'
+gem 'sass'
 gem 'bootstrap-sass'
 
 gem 'awesome_print'

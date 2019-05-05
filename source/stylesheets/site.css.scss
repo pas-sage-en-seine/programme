@@ -45,6 +45,7 @@ body {
 table.timetable {
 	width: 100%;
 	border-collapse: collapse;
+	border: 1px solid #aaa;
 	table-layout: fixed;
 
 	tr {
@@ -69,43 +70,42 @@ table.timetable {
 		}
 	}
 
-	ul {
-		list-style-type: none;
-		padding: 0;
-		margin: 0;
-
-		li {
-			height: $line-height;
-
-			& {
-				margin-top: 5px;
-			}
-		}
-	}
-
 	tbody {
+		th, td {
+			height: 150px;
+			border-top: none;
+			border-bottom: none;
+		}
+
 		th {
 			font-size: 0.75em;
+			vertical-align: top;
 		}
 
 		td {
+			//Fuck off, Firefox
+			//height: 100%;
+			position: relative;
+
 			vertical-align: top;
 
-			ul {
-				li {
-					padding: 10px;
-					cursor: pointer;
-					// text-align: justify;
-					overflow: hidden;
+			& > div {
+				//Fuck off, Firefox
+				//width: 100%;
+				//height: 100%;
+				position: absolute;
+				top: 5px;
+				bottom: 5px;
+				left: 5px;
+				right: 5px;
 
-					&.half {
-						height: $line-height/2;
-					}
+				//Fuck off, Firefox
+				//display: inline-table;
+				padding: 10px;
 
-					&.double {
-						height: 2*$line-height;
-					}
-				}
+				cursor: pointer;
+				// text-align: justify;
+				overflow: hidden;
 			}
 		}
 

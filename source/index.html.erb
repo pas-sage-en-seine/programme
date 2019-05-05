@@ -3,13 +3,48 @@
 	render = Redcarpet::Render::HTML
 	markdown = Redcarpet::Markdown.new render, autolink: true
 
-	planning = YAML.load(File.read File.join Middleman::Application.root, 'config/current.yml')
-					.deep_symbolize_keys
+	planning = File.join Middleman::Application.root, 'config/current.yml'
+	planning = YAML.load_file(planning).deep_symbolize_keys
 
 	def parse_time(time)
 		hour, min = time.split ':'
 		60 * hour.to_i + min.to_i
 	end
+
+	def to_time(time)
+		'%02d:%02d' % [time/60, time % 60]
+	end
+
+	FROM = parse_time('10:00')
+	TO = parse_time('21:00')
+	STEP = parse_time('00:30')
+
+	columns = planning.collect do |day, events|
+		events = events.collect do |location, events|
+			tmp = events.collect do |event|
+				from = parse_time event[:from]
+				to = parse_time event[:to]
+				height = (to - from) / STEP
+				event.merge from: from, to: to, height: height
+			end.sort { |a, b| a[:from] <=> b[:from] }
+			events = []
+			last = FROM
+			tmp.each do |event|
+				from, to = event.values_at :from, :to
+				if from > last
+					height = (from - last) / STEP
+					events << { placeholder: true, from: last, to: from, height: height }
+				end
+				last = to
+				events << event
+			end
+			unless last == TO
+				height = (TO - last) / STEP
+				events << { placeholder: true, from: last, to: TO, height: height }
+			end
+			[location, events]
+		end.collect { |l, es| { day: day, location: l, events: es } }
+	end.flatten 1
 %>
 
 <div class="container-fluid">
@@ -20,8 +55,8 @@
 				<th rowspan="2">
 					<% link_to 'index.ics' do %>
 						<svg version="1.1" xmlns="http://www.w3.org/2000/svg"
-							x="0px" y="0px"
-							viewBox="0 0 60 60" style="enable-background:new 0 0 60 60;" xml:space="preserve">
+							 x="0px" y="0px"
+							 viewBox="0 0 60 60" style="enable-background:new 0 0 60 60;" xml:space="preserve">
 							<g>
 								<title>Calendrier</title>
 								<g>
@@ -43,90 +78,81 @@
 							</g>
 						</svg>
 					<% end %>
-					<!--div class="giggity">
+					<div class="giggity">
 						<%= image_tag 'giggity.png', alt: 'Giggity', title: 'Giggity', class: 'logo' %>
 						<%= image_tag 'qrcode.png', class: 'qrcode hidden' %>
-					</div-->
+					</div>
 				</th>
-				<% planning.each do |day, events| %>
+				<% planning.each do |day, locations| %>
 					<%=
-						n = events.size
+						n = locations.size
 						attributes = n == 1 ? nil : { colspan: n }
-						content_tag :th, attributes do
-							I18n.l day, format: '%A %d %B'
-						end
+						content_tag(:th, attributes) { I18n.l day, format: '%A %d %B' }
 					%>
 				<% end %>
 			</tr>
 			<tr>
-				<% planning.each do |_, events| %>
-					<% events.each do |location, _| %>
-						<td>
-
-							<%= case location.to_sym
-								when :cinema
-									'Salle cinéma'
-								when :hall
-									'Accueil'
-								when :town
-									'Village asso'
-								when :young
-									'Espace jeunesse'
-								end
-							%>
-						</td>
-					<% end %>
+				<% planning.each do |day, locations|
+					locations.each do |location, _|      %>
+					<th>
+						<%= case location.to_sym
+							when :cinema
+								'Salle cinéma'
+							when :hall
+								'Accueil'
+							when :town
+								'Village asso'
+							when :young
+								'Espace jeunesse'
+							end
+						%>
+					</th>
+				<% end %>
 				<% end %>
 			</tr>
 			</thead>
 			<tbody>
-			<tr>
-				<th>
-					<ul>
-						<% (10..21).each do |hour| %>
-							<li data-time="<%= hour %>:00"><%= hour %>:00</li>
-						<% end %>
-					</ul>
-				</th>
-				<% planning.each do |_, events| %>
-					<% events.each do |_, events|
-						events ||= []
-						events.sort! { |a, b| parse_time(a[:from]) <=> parse_time(b[:from]) }
-					%>
-						<td>
-							<ul>
-								<% events.each do |event| %>
-									<%
-										from, to = event[:from], event[:to]
-										duration = parse_time(to) - parse_time(from)
-										classes = [:event, event[:type]]
-										classes << :half if duration <= 30
-										classes << :double if duration >= 90
-										classes = classes.join ' '
-									%>
-									<% content_tag :li, class: classes, data: { from: from, to: to } do %>
-										<div class="time">
-											<%= from %> - <%= to %>
-										</div>
-										<div class="title">
-											<%= event[:title] %>
-										</div>
-										<div class="author">
-											<%= event[:author] %>
-										</div>
-										<div class="description">
-											<%=
-												description = event[:description]
-												markdown.render description if description
-											%>
-										</div>
-									<% end %>
+			<%
+				(FROM...TO).step(STEP).each do |time| %>
+				<tr>
+					<th><%= to_time(time) if time % 60 == 0 %></th>
+					<% columns.each do |column|
+						events = column[:events]
+						event = events.first
+						if event
+							from, to, height, placeholder = event.values_at :from, :to, :height, :placeholder
+							if from == time
+								events = events.delete_at 0
+								attributes = height == 1 ? {} : { rowspan: height }
+ 						    %>
+						<% unless event[:placeholder]
+							   content_tag :td, **attributes do %>
+								<% content_tag :div, class: "event #{event[:type]}" do %>
+									<div class="time">
+										<%= to_time from %> - <%= to_time to %>
+									</div>
+									<div class="title">
+										<%= event[:title] %>
+									</div>
+									<div class="author">
+										<%= event[:author] %>
+									</div>
+									<div class="description">
+										<%=
+											description = event[:description]
+											markdown.render description if description
+										%>
+									</div>
 								<% end %>
-							</ul>
-						</td>
+							<% end %>
+						<% else %>
+							<%= content_tag :td, '', **attributes %>
+						<% end %>
 					<% end %>
-				<% end %>
-			</tr>
+					<% end %>
+					<% end %>
+				</tr>
+			<% end %>
 			</tbody>
 		</table>
 		<ul class="legend">

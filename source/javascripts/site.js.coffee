@@ -1,75 +1,13 @@
 class TimeTable
 	constructor: (@element, @modal) ->
-		events = @element.querySelectorAll 'tbody td > ul > li'
+		events = @element.querySelectorAll 'tbody td > div'
 		for event in events
 			# JS scoping hell…
 			event.addEventListener 'click', ((_this, _event) ->
 				-> _this.modal.open _event
 			)(this, event)
 
-	parse_time: (time) ->
-		time = time.split ':'
-		hour = parseInt time[0]
-		min = parseInt time[1]
-		60 * hour + min
-
-	find_including: (times, time) ->
-		previous = null
-		for current in times
-			if previous?
-				if previous.time <= time < current.time
-					return [previous, current]
-			else
-				previous = current
-		null
-
-	prorate: (ref, time) ->
-		from = ref[0]
-		to = ref[1]
-
-		ratio = (time - from.time) / (to.time - from.time)
-		top = from.top + (to.top - from.top) * ratio
-		top
-
-	position: (times, element) ->
-		from = @parse_time(element.dataset.from)
-		to = @parse_time(element.dataset.to) - 5
-
-		including_from = @find_including times, from
-		including_to = @find_including times, to
-
-		top = @prorate including_from, from
-		bottom = @prorate including_to, to
-
-		root = element.parentElement
-		width = root.offsetWidth
-
-		element.style.top = "#{top + window.pageYOffset}px"
-		element.style.height = "#{bottom - top}px"
-		element.style.width = "#{width}px"
-		element.style.position = 'absolute'
-
-	init: ->
-		times = []
-
-		hours = @element.querySelectorAll 'tbody th > ul > li'
-		for hour in hours
-			time = @parse_time hour.dataset.time
-			times.push {
-				time: time,
-				top: hour.getBoundingClientRect().top
-			}
-		last = hours[hours.length - 1]
-		time = @parse_time last.dataset.time
-		rect = last.getBoundingClientRect()
-		times.push {
-			time: time + 60
-			top: rect.top + rect.height
-		}
-
-		events = @element.querySelectorAll 'tbody td > ul > li'
-		for event in events
-			@position times, event
+	init: () ->
 
 class Modal
 	size: { width: 800, height: 480 }

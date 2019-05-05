@@ -4,7 +4,6 @@ gem 'middleman', '~> 4.3.3'
 gem 'middleman-sprockets'
 gem 'middleman-deploy', '~> 2.0.0.pre.alpha'
 gem 'sass'
-gem 'bootstrap-sass'
 
 gem 'middleman-livereload'
 group :development do

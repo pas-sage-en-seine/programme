@@ -2,7 +2,7 @@ activate :sprockets
 activate :i18n, mount_at_root: :fr
 
 configure :development do
-	activate :livereload, apply_css_live: true, apply_js_live: true, no_swf: true if defined? Livereload
+	activate :livereload, apply_css_live: true, apply_js_live: true, no_swf: true
 end
 
 configure :build do

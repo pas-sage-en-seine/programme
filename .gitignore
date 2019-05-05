@@ -2,4 +2,5 @@
 .cache
 .DS_Store
 .sass-cache
+source/images/qrencode.png
 build/

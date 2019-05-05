@@ -7,7 +7,7 @@ end
 
 configure :build do
 #	set :relative_links, true
-#	activate :relative_assets
+	activate :relative_assets
 	activate :minify_css
 	activate :minify_javascript
 end

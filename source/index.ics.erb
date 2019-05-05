@@ -7,11 +7,12 @@
 		Icalendar::Values::DateTime.new date
 	end
 
-	planning = YAML.load(File.read File.join Middleman::Application.root, 'config/current.yml')
-					.deep_symbolize_keys
+	planning = File.join Middleman::Application.root, 'config/current.yml'
+	planning = YAML.load_file(planning).deep_symbolize_keys
 
 	cal = Icalendar::Calendar.new
-	cal.append_custom_property 'NAME', 'PSES 2018'
+	# cal.x_wr_calname 'PSES 2019'
+	cal.append_custom_property 'NAME', 'PSES 2019'
 
 	LOCATIONS = {
 			cinema: 'Salle cinéma',
@@ -27,8 +28,10 @@
 				title = event[:title]
 
 				cal.event do |e|
+					from = merge day, from
 					e.uid         = "urn:sha1:#{Digest::SHA1.hexdigest title}"
-					e.dtstart     = merge day, from
+					e.dtstart     = from
+					e.dtstamp     = from
 					e.dtend       = merge day, to
 					e.organizer   = Icalendar::Values::CalAddress.new nil, cn: event[:author]
 					e.summary     = title

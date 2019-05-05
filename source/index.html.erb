@@ -99,7 +99,7 @@
 									<%
 										from, to = event[:from], event[:to]
 										duration = parse_time(to) - parse_time(from)
-										classes = [event[:type]]
+										classes = [:event, event[:type]]
 										classes << :half if duration <= 30
 										classes << :double if duration >= 90
 										classes = classes.join ' '

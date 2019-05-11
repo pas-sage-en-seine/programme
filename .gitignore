@@ -2,7 +2,7 @@
 .cache
 .DS_Store
 .sass-cache
+.idea
 source/images/qrencode.png
 build/
-.idea
-config/
+config/current.yml

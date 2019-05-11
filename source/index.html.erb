@@ -15,6 +15,11 @@
 		'%02d:%02d' % [time/60, time % 60]
 	end
 
+	def label_type(type)
+	    labels = { "misc" => "Divers", "workshop" => "Atelier", "talk" => "Conférence"}
+	    labels[type]
+    end
+
 	FROM = parse_time('10:00')
 	TO = parse_time('21:00')
 	STEP = parse_time('00:30')
@@ -46,9 +51,7 @@
 		end.collect { |l, es| { day: day, location: l, events: es } }
 	end.flatten 1
 %>
-
-<a href="https://passageenseine.fr/" title="Site principal"><img src="assets/images/pastille.png" alt="Logo Pas Sage en Seine" /></a>
-<h1>Édition 2019</h1>
+<h1 class="planning__title">PSES 2019</h1>
 <ul class="legend">
 	<li>
 		<span class="talk">&nbsp;</span> Conférence
@@ -86,9 +89,15 @@
     </ul>
 </nav>
 <table class="timetable" id="timetable" aria-live="polite">
+	<caption class="timetable__caption">Planning de Pas Sage en Seine 2019</caption>
+    <col>
+    <colgroup span="2"></colgroup>
+    <colgroup span="2"></colgroup>
+    <colgroup span="2"></colgroup>
+    <colgroup span="2"></colgroup>
 	<thead>
 	<tr>
-		<th rowspan="2">
+		<td rowspan="2">
 			<% link_to 'index.ics' do %>
 				<svg version="1.1" xmlns="http://www.w3.org/2000/svg"
 					 x="0px" y="0px"
@@ -118,20 +127,20 @@
 				<%= image_tag 'giggity.png', alt: 'Giggity', class: 'logo' %>
 				<%= image_tag 'qrcode.png', class: 'qrcode hidden' %>
 			</div>
-		</th>
+		</td>
 		<% planning.each.with_index(1) do |(day, locations), i| %>
 			<%=
 				n = locations.size
 				attributes = n == 1 ? nil : { colspan: n }
 				label = I18n.l day, format: '%A %d %B'
-				content_tag(:th, label, :colspan => n == 1 ? nil : n, :data => {:day => i})
+				content_tag(:th, label, :scope => 'colgroup', :colspan => n == 1 ? nil : n, :data => {:day => i})
 			%>
 		<% end %>
 	</tr>
 	<tr>
 		<% planning.each.with_index(1) do |(day, locations), i|
 			locations.each do |location, _|      %>
-			<th data-day="<%= i %>">
+			<th scope='col' data-day="<%= i %>">
 				<%= case location.to_sym
 					when :cinema
 						'Salle cinéma'
@@ -153,8 +162,8 @@
 		(FROM...TO).step(STEP).each do |time| %>
 		<tr>
 			<%=
-				clazz = :hidden unless time % 60 == 0
-				content_tag :th, to_time(time), class: clazz
+				hiddenClass = "visually-hidden" unless time % 60 == 0
+				content_tag(:th, content_tag(:span, to_time(time), class: hiddenClass), :scope => 'row')
 			%>
 			<% columns.each_with_index do |column, index|
 				events = column[:events]
@@ -170,10 +179,13 @@
 					%>
 				<% unless event[:placeholder]
 					   content_tag :td, **attributes do %>
-						<% content_tag :div, class: "event #{event[:type]}" do %>
+						<% content_tag :article, class: "event #{event[:type]}" do %>
 							<div class="time">
 								<%= to_time from %> - <%= to_time to %>
 							</div>
+						  <div class="type">
+                  <%= label_type(event[:type]) %>
+              </div>
 							<div class="title">
 								<%= event[:title] %>
 							</div>
@@ -200,11 +212,11 @@
 </table>
 
 <div class="modal hidden">
-	<div class="header">
+	<header class="header">
 		<div class="time"></div>
 		<div class="title"></div>
 		<div class="author"></div>
-	</div>
+	</header>
 	<div class="body"></div>
 	<div class="close"></div>
 	<div class="cover"></div>

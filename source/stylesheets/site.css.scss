@@ -1,8 +1,8 @@
-* {
+*,
+*::before,
+*::after {
 	box-sizing: border-box;
 }
-
-$line-height: 150px;
 
 $background: #212121;
 $event-talk: #2980b9;
@@ -26,13 +26,43 @@ $sans: Helvetica, Arial, sans-serif;
 	transition: $args;
 }
 
+.visually-hidden {
+	/* Remove the item from normal flow */
+	position: absolute;
+	/* Workaround for falsely pronounced, smushed text */
+	white-space: nowrap;
+	/* Set it to the smallest possible size (some screen readers ignore elements with zero height and width) */
+	width: 1px;
+	height: 1px;
+	/* Hide overflowing content after resizing */
+	overflow: hidden;
+	/* Reset any property that may change the elements size */
+	border: 0;
+	padding: 0;
+	/* Clipping defines what part of an element should be displayed. */
+	/* Deprecated clip property for older browsers */
+	clip: rect(0 0 0 0);
+	/* clip-path for newer browsers. inset(50%) defines an inset rectangle that makes the content disappear.  */
+	clip-path: inset(50%);
+	/* It seems like at the moment nobody is quite sure why margin: -1px is there. On top of that it seems to cause issues (see: https://github.com/h5bp/html5-boilerplate/issues/1985). */
+	margin: -1px;
+}
+
 html {
 	font-size: 60.5%;
 }
 
 body {
-	font-size: 16px;
-	font-family: $sans;
+	font-size: 1.6rem;
+    font-family: $sans;
+}
+
+.planning__title {
+  font-family: Georgia, serif;
+}
+
+.timetable__caption {
+  margin-bottom: 12px;
 }
 
 table.timetable {
@@ -86,7 +116,7 @@ table.timetable {
 
 			vertical-align: top;
 
-			& > div {
+			& > .event {
 				//Fuck off, Firefox
 				//width: 100%;
 				//height: 100%;
@@ -129,7 +159,12 @@ ul.legend {
 }
 
 .title {
-	font-size: 2rem;
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+.type {
+    margin-bottom: 8px;
 }
 
 .author {

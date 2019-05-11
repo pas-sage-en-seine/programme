@@ -1,6 +1,6 @@
 class TimeTable
 	constructor: (@element, @modal, @navigation) ->
-		events = @element.querySelectorAll 'tbody td > div'
+		events = @element.querySelectorAll 'tbody td > .event'
 		for event in events
 			# JS scoping hell…
 			event.addEventListener 'click', ((_this, _event) ->
@@ -21,9 +21,13 @@ class TimeTable
 	hideOtherDays: (day) ->
 			toRemoveClass = document.querySelectorAll ".navigation__item:not(:nth-of-type(#{ day })) .navigation__select"
 			toHide = document.querySelectorAll "td:not([data-col='#{ day }']), th:not([data-col='#{ day }'])";
+			toHideCol = document.querySelectorAll "colgroup:not(:nth-of-type(#{ Number(day) + 1 })";
 
 			for hide in toHide
 				hide.style.display = 'none'
+
+			for col in toHideCol
+				col.style.display = 'none'
 
 			for remove in toRemoveClass
 				remove.classList.remove('navigation__select--selected');
@@ -33,19 +37,18 @@ class TimeTable
 	selectDay: (day) ->
 		document.querySelector(".navigation__item:nth-of-type(#{ day }) .navigation__select").classList.add "navigation__select--selected";
 		document.querySelector(".navigation__item:nth-of-type(#{ day }) .navigation__select").setAttribute("aria-expanded", true);
+		document.querySelector("colgroup:nth-of-type(#{ Number(day) + 1 })").style.display = 'table-column-group';
 		toShow = document.querySelectorAll "td[data-col='#{ day }'], td[data-col='#{ Number(day) + 1 }'], th[data-day='#{ day }']";
 		for show in toShow
 			show.style.display = 'table-cell'
 
 	displayAllDays: () ->
-		console.log('display all')
 		toShow = document.querySelectorAll "td, th";
 		for show in toShow
 			show.style.display = 'table-cell'
 
 
 	displayDay: (btn) ->
-		console.log('displayDay')
 		if window.innerWidth > 1200
 			@displayAllDays()
 			return

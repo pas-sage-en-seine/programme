@@ -1,6 +1,6 @@
 class TimeTable
 	constructor: (@element, @modal) ->
-		events = @element.querySelectorAll 'tbody td > div'
+		events = @element.querySelectorAll 'tbody td > .event'
 		for event in events
 			# JS scoping hell…
 			event.addEventListener 'click', ((_this, _event) ->

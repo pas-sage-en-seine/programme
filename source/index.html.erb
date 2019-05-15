@@ -51,7 +51,56 @@
 		end.collect { |l, es| { day: day, location: l, events: es } }
 	end.flatten 1
 %>
+<header role="banner" class="mainHeader">
+  <nav id="main" class="mainHeader__nav">
+    <a class="mainHeader__navHome" title="Retour à l'accueil" href="https://passageenseine.fr/">
+      <img class="mainHeader__logo" src="https://passageenseine.fr/assets/images/pastille.png" alt="Logo Pas Sage en Seine" />
+    </a>
+    <div class="mainNavigation">
+      <ul class="mainNavigation__list">
+        <li class="mainNavigation__item"><a class="mainNavigation__link" href="https://passageenseine.fr/#Programme">Programme</a></li>
+        <li class="mainNavigation__item"><a class="mainNavigation__link" href="https://passageenseine.fr/#Info">Infos</a></li>
+        <li class="mainNavigation__item"><a class="mainNavigation__link" href="https://passageenseine.fr/#CodeConduite">Code de conduite</a></li>
+        <li class="mainNavigation__item"><a class="mainNavigation__link" href="https://passageenseine.fr/#Assopage">Association</a></li>
+        <li class="mainNavigation__item"><a class="mainNavigation__link" href="https://passageenseine.fr/#Archive">Archives & vidéos</a></li>
+      </ul>
+    </div>
+</header>
+<main>
 <h1 class="planning__title">PSES 2019</h1>
+<% link_to 'index.ics', class:"downloadCalendar" do %>
+  <svg width="30" height="30" version="1.1" role="presentation" xmlns="http://www.w3.org/2000/svg"
+     x="0px" y="0px"
+     viewBox="0 0 60 60" style="enable-background:new 0 0 60 60;" xml:space="preserve">
+    <g>
+      <title>Calendrier</title>
+      <g>
+        <rect x="1" y="13" style="fill:#ECF0F1;" width="56" height="39"/>
+        <polygon style="fill:#21AE5E;" points="42,0 16,0 1,0 1,13 57,13 57,0 		"/>
+        <path style="fill:#556080;" d="M19,46c-0.552,0-1-0.447-1-1V19c0-0.553,0.448-1,1-1s1,0.447,1,1v26C20,45.553,19.552,46,19,46z"/>
+        <path style="fill:#556080;" d="M13,26c-0.256,0-0.512-0.098-0.707-0.293c-0.391-0.391-0.391-1.023,0-1.414l6-6
+        c0.391-0.391,1.023-0.391,1.414,0s0.391,1.023,0,1.414l-6,6C13.512,25.902,13.256,26,13,26z"/>
+        <path style="fill:#556080;" d="M38,32c-3.86,0-7-3.141-7-7s3.14-7,7-7s7,3.141,7,7S41.86,32,38,32z M38,20c-2.757,0-5,2.243-5,5
+        s2.243,5,5,5s5-2.243,5-5S40.757,20,38,20z"/>
+        <path style="fill:#556080;" d="M38,46c-3.86,0-7-3.141-7-7c0-0.553,0.448-1,1-1s1,0.447,1,1c0,2.757,2.243,5,5,5s5-2.243,5-5V25
+        c0-0.553,0.448-1,1-1s1,0.447,1,1v14C45,42.859,41.86,46,38,46z"/>
+      </g>
+      <g>
+        <rect x="37" y="38" style="fill:#21AE5E;" width="22" height="22"/>
+        <rect x="47" y="39.586" style="fill:#FFFFFF;" width="2" height="16"/>
+        <polygon style="fill:#FFFFFF;" points="48,57 41,50.293 42.476,48.879 48,54.172 53.524,48.879 55,50.293 		"/>
+      </g>
+    </g>
+  </svg>
+
+  Télécharger le programme (.ics, 65Ko)
+<% end %>
+<button class="giggity" role="presentation">
+  <%= image_tag 'giggity.png', alt: 'Logo Giggity', class: 'logo' %>
+  Afficher le QRCode Giggity
+  <%= image_tag 'qrcode.png', alt: 'QRCode Giggity',  class: 'qrcode' %>
+</button>
+
 <ul class="legend">
 	<li>
 		<span class="talk">&nbsp;</span> Conférence
@@ -97,37 +146,7 @@
     <colgroup span="2"></colgroup>
 	<thead>
 	<tr>
-		<td rowspan="2">
-			<% link_to 'index.ics' do %>
-				<svg version="1.1" xmlns="http://www.w3.org/2000/svg"
-					 x="0px" y="0px"
-					 viewBox="0 0 60 60" style="enable-background:new 0 0 60 60;" xml:space="preserve">
-					<g>
-						<title>Calendrier</title>
-						<g>
-							<rect x="1" y="13" style="fill:#ECF0F1;" width="56" height="39"/>
-							<polygon style="fill:#21AE5E;" points="42,0 16,0 1,0 1,13 57,13 57,0 		"/>
-							<path style="fill:#556080;" d="M19,46c-0.552,0-1-0.447-1-1V19c0-0.553,0.448-1,1-1s1,0.447,1,1v26C20,45.553,19.552,46,19,46z"/>
-							<path style="fill:#556080;" d="M13,26c-0.256,0-0.512-0.098-0.707-0.293c-0.391-0.391-0.391-1.023,0-1.414l6-6
-							c0.391-0.391,1.023-0.391,1.414,0s0.391,1.023,0,1.414l-6,6C13.512,25.902,13.256,26,13,26z"/>
-							<path style="fill:#556080;" d="M38,32c-3.86,0-7-3.141-7-7s3.14-7,7-7s7,3.141,7,7S41.86,32,38,32z M38,20c-2.757,0-5,2.243-5,5
-							s2.243,5,5,5s5-2.243,5-5S40.757,20,38,20z"/>
-							<path style="fill:#556080;" d="M38,46c-3.86,0-7-3.141-7-7c0-0.553,0.448-1,1-1s1,0.447,1,1c0,2.757,2.243,5,5,5s5-2.243,5-5V25
-							c0-0.553,0.448-1,1-1s1,0.447,1,1v14C45,42.859,41.86,46,38,46z"/>
-						</g>
-						<g>
-							<rect x="37" y="38" style="fill:#21AE5E;" width="22" height="22"/>
-							<rect x="47" y="39.586" style="fill:#FFFFFF;" width="2" height="16"/>
-							<polygon style="fill:#FFFFFF;" points="48,57 41,50.293 42.476,48.879 48,54.172 53.524,48.879 55,50.293 		"/>
-						</g>
-					</g>
-				</svg>
-			<% end %>
-			<div class="giggity">
-				<%= image_tag 'giggity.png', alt: 'Giggity', class: 'logo' %>
-				<%= image_tag 'qrcode.png', class: 'qrcode hidden' %>
-			</div>
-		</td>
+		<td rowspan="2"></td>
 		<% planning.each.with_index(1) do |(day, locations), i| %>
 			<%=
 				n = locations.size
@@ -181,7 +200,7 @@
 					   content_tag :td, **attributes do %>
 						<% content_tag :article, class: "event #{event[:type]}" do %>
 							<div class="time">
-								<%= to_time from %> - <%= to_time to %>
+								<%= to_time from %> – <%= to_time to %>
 							</div>
 						  <div class="type">
                   <%= label_type(event[:type]) %>
@@ -221,3 +240,4 @@
 	<div class="close"></div>
 	<div class="cover"></div>
 </div>
+</main>

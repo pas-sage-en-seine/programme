@@ -170,16 +170,6 @@ class Modal
 
 class Giggity
 	@init: ->
-		giggity_logo = document.querySelector '.giggity .logo'
-		position = giggity_logo.getBoundingClientRect()
-		giggity_qrcode = document.querySelector '.giggity .qrcode'
-		giggity_qrcode.style.top = "#{position.bottom + 20}px"
-		giggity_qrcode.style.left = "#{position.right + 20}px"
-
-		giggity_logo.addEventListener 'mouseenter', ->
-			giggity_qrcode.classList.remove 'hidden'
-		giggity_logo.addEventListener 'mouseleave', ->
-			giggity_qrcode.classList.add 'hidden'
 
 
 init = ->

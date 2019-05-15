@@ -5,26 +5,14 @@
 $line-height: 150px;
 
 $background: #212121;
-//$background: #000;
-
-//$event-talk: #3F51B5;
-//$event-workshop: #f44336;
-//$event-concert: #4CAF50;
-//$event-round-table: #FFC107;
-//$event-misc: #673AB7;
-
-//$event-talk: #2962FF;
-//$event-workshop: #DD2C00;
-//$event-concert: #00C853;
-//$event-round-table: #FF6D00;
-//$event-misc: #6200EA;
-
 $event-talk: #2980b9;
 $event-workshop: #c0392b;
 $event-concert: #27ae60;
 $event-round-table: #283593;
 $event-misc: #673AB7;
 $event-young: #EF6C00;
+$serif: Consolas, monaco, monospace;
+$sans: Helvetica, Arial, sans-serif;
 
 @mixin event($color) {
 	background-color: $color;
@@ -38,8 +26,13 @@ $event-young: #EF6C00;
 	transition: $args;
 }
 
+html {
+	font-size: 60.5%;
+}
+
 body {
-	font-size: 10pt;
+	font-size: 16px;
+	font-family: $sans;
 }
 
 table.timetable {
@@ -72,7 +65,7 @@ table.timetable {
 
 	tbody {
 		th, td {
-			height: 150px;
+			height: 210px;
 			border-top: none;
 			border-bottom: none;
 		}
@@ -136,11 +129,17 @@ ul.legend {
 }
 
 .title {
-	font-weight: bold;
+	font-size: 2rem;
 }
 
 .author {
 	text-align: right;
+}
+
+.time,
+.author,
+.type {
+	font-family: $serif;
 }
 
 .talk {
@@ -269,6 +268,56 @@ ul.legend {
 			opacity: 0;
 			visibility: hidden;
 		}
+	}
+}
+
+.navigation {
+	margin-bottom: 1.2rem;
+}
+
+.navigation__list {
+	list-style: none;
+	display: flex;
+	width: 100%;
+	flex-wrap: wrap;
+	margin: 0;
+	padding: 0;
+}
+
+.navigation__item {
+	flex: 1;
+	flex-basis: 25%;
+	display: block;
+	min-width: 150px;
+	padding: 12px 20px;
+	text-align: center;
+	border: 1px solid #fff;
+}
+
+.navigation__select {
+	text-transform: uppercase;
+	font-family: $serif;
+	color: #fff;
+	border: none;
+	font-size: 1.6rem;
+	background: transparent;
+	padding: 4px 0;
+	border-bottom: 1px solid transparent;
+}
+
+.navigation__select--selected,
+.navigation__select:hover,
+.navigation__select:focus {
+	border-color: #fff;
+}
+
+.navigation__select--selected {
+	border-style: none none dashed;
+}
+
+@media screen and (min-width: 1200px) {
+	.navigation {
+		display: none;
 	}
 }
 

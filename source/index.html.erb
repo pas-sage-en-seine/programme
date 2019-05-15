@@ -47,6 +47,8 @@
 	end.flatten 1
 %>
 
+<a href="https://passageenseine.fr/" title="Site principal"><img src="assets/images/pastille.png" alt="Logo Pas Sage en Seine" /></a>
+<h1>Édition 2019</h1>
 <ul class="legend">
 	<li>
 		<span class="talk">&nbsp;</span> Conférence
@@ -67,7 +69,23 @@
 		<span class="misc">&nbsp;</span> Divers
 	</li>
 </ul>
-<table class="timetable">
+<nav class="navigation" id="mobile-navigation">
+    <ul class="navigation__list">
+        		<% planning.each.with_index(1) do |(day, _), i| %>
+              <%=
+                attributes = { :class => "navigation__item" }
+                label = I18n.l day, format: '%A %d %B'
+                content_tag(:li,
+                  content_tag(:button, label,
+                    :class => "navigation__select",
+                    :data => {:day => i},
+                    :aria => { :expanded => false, :controls => "timetable" }
+                  ), attributes)
+              %>
+            <% end %>
+    </ul>
+</nav>
+<table class="timetable" id="timetable" aria-live="polite">
 	<thead>
 	<tr>
 		<th rowspan="2">
@@ -101,18 +119,19 @@
 				<%= image_tag 'qrcode.png', class: 'qrcode hidden' %>
 			</div>
 		</th>
-		<% planning.each do |day, locations| %>
+		<% planning.each.with_index(1) do |(day, locations), i| %>
 			<%=
 				n = locations.size
 				attributes = n == 1 ? nil : { colspan: n }
-				content_tag(:th, attributes) { I18n.l day, format: '%A %d %B' }
+				label = I18n.l day, format: '%A %d %B'
+				content_tag(:th, label, :colspan => n == 1 ? nil : n, :data => {:day => i})
 			%>
 		<% end %>
 	</tr>
 	<tr>
-		<% planning.each do |day, locations|
+		<% planning.each.with_index(1) do |(day, locations), i|
 			locations.each do |location, _|      %>
-			<th>
+			<th data-day="<%= i %>">
 				<%= case location.to_sym
 					when :cinema
 						'Salle cinéma'
@@ -137,14 +156,17 @@
 				clazz = :hidden unless time % 60 == 0
 				content_tag :th, to_time(time), class: clazz
 			%>
-			<% columns.each do |column|
+			<% columns.each_with_index do |column, index|
 				events = column[:events]
 				event = events.first
 				if event
 					from, to, height, placeholder = event.values_at :from, :to, :height, :placeholder
 					if from == time
 						events = events.delete_at 0
-						attributes = height == 1 ? {} : { rowspan: height }
+						attributes = {
+						    rowspan: height > 1 ? height : nil,
+						    "data-col": index
+					    }
 					%>
 				<% unless event[:placeholder]
 					   content_tag :td, **attributes do %>

@@ -4,3 +4,5 @@
 .sass-cache
 source/images/qrencode.png
 build/
+.idea
+config/

@@ -1,5 +1,5 @@
 class TimeTable
-	constructor: (@element, @modal) ->
+	constructor: (@element, @modal, @navigation) ->
 		events = @element.querySelectorAll 'tbody td > div'
 		for event in events
 			# JS scoping hell…
@@ -7,7 +7,55 @@ class TimeTable
 				-> _this.modal.open _event
 			)(this, event)
 
+		btnsSelect = @navigation.querySelectorAll '.navigation__select'
+		for btn in btnsSelect
+		# JS scoping hell…
+			btn.addEventListener 'click', ((_thisbtn, _eventbtn) ->
+				-> _thisbtn.displayDay _eventbtn
+			)(this, btn)
+
 	init: () ->
+		window.addEventListener 'resize', @displayDay()
+		@displayDay();
+
+	hideOtherDays: (day) ->
+			toRemoveClass = document.querySelectorAll ".navigation__item:not(:nth-of-type(#{ day })) .navigation__select"
+			toHide = document.querySelectorAll "td:not([data-col='#{ day }']), th:not([data-col='#{ day }'])";
+
+			for hide in toHide
+				hide.style.display = 'none'
+
+			for remove in toRemoveClass
+				remove.classList.remove('navigation__select--selected');
+				remove.setAttribute('aria-expanded', false);
+
+
+	selectDay: (day) ->
+		document.querySelector(".navigation__item:nth-of-type(#{ day }) .navigation__select").classList.add "navigation__select--selected";
+		document.querySelector(".navigation__item:nth-of-type(#{ day }) .navigation__select").setAttribute("aria-expanded", true);
+		toShow = document.querySelectorAll "td[data-col='#{ day }'], td[data-col='#{ Number(day) + 1 }'], th[data-day='#{ day }']";
+		for show in toShow
+			show.style.display = 'table-cell'
+
+	displayAllDays: () ->
+		console.log('display all')
+		toShow = document.querySelectorAll "td, th";
+		for show in toShow
+			show.style.display = 'table-cell'
+
+
+	displayDay: (btn) ->
+		console.log('displayDay')
+		if window.innerWidth > 1200
+			@displayAllDays()
+			return
+
+		day = 1;
+		if (btn)
+			day = btn.getAttribute('data-day')
+
+		@hideOtherDays(day);
+		@selectDay(day) 	# TODO: (IMPROVEMENT) TEST IF CURRENT DAY === ONE DAY of the EVENT
 
 class Modal
 	size: { width: 800, height: 480 }
@@ -133,10 +181,11 @@ class Giggity
 
 init = ->
 	modal = new Modal document.querySelector '.modal'
+	navigation = document.querySelector '.navigation'
 
 	tables = document.querySelectorAll 'table.timetable'
 	for table in tables
-		new TimeTable(table, modal).init()
+		new TimeTable(table, modal, navigation).init()
 
 	Giggity.init()
 

@@ -1,0 +1,2228 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8"/>
+    <title>Demo PSES</title>
+
+    <style>
+        html {
+            font-size: 62.5%;
+            background: #000;
+            color: #fff;
+        }
+
+        body {
+            font-size: 1.6rem;
+        }
+
+        .navigation {
+            margin-bottom: 1.2rem;
+        }
+
+        .navigation__list {
+            list-style: none;
+            display: flex;
+            width: 100%;
+            flex-wrap: wrap;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navigation__item {
+            width: calc(25% - 42px);
+            display: block;
+            min-width: 150px;
+            padding: 12px 20px;
+            text-align: center;
+            border: 1px solid #fff;
+        }
+
+        .navigation__select {
+            text-transform: uppercase;
+            color: #fff;
+            border: none;
+            font-size: 1.6rem;
+            background: transparent;
+            padding: 4px 0;
+            border-bottom: 1px solid transparent;
+        }
+
+        .navigation__select--selected,
+        .navigation__select:hover,
+        .navigation__select:focus {
+            border-color: #fff;
+        }
+
+        .navigation__select--selected {
+            border-style: none none dashed;
+        }
+
+        @media (min-width: 1200px) {
+            .navigation {
+                display: none;
+            }
+        }
+
+    </style>
+</head>
+<body>
+<nav class="navigation" id="mobile-navigation">
+    <ul class="navigation__list">
+        <li class="navigation__item">
+            <button class="navigation__select navigation__select--selected" onclick="displayDay(1)">Jour 1</button>
+        </li>
+        <li class="navigation__item">
+            <button class="navigation__select" onclick="displayDay(2)">Jour 2</button>
+        </li>
+        <li class="navigation__item">
+            <button class="navigation__select" onclick="displayDay(3)">Jour 3</button>
+        </li>
+        <li class="navigation__item">
+            <button class="navigation__select" onclick="displayDay(4)">Jour 4</button>
+        </li>
+    </ul>
+</nav>
+<table class="timetable">
+    <thead>
+    <tr>
+        <th rowspan="2">
+            <a href="/index.ics">
+                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 60 60"
+                     style="enable-background:new 0 0 60 60;" xml:space="preserve">
+					<g>
+						<title>Calendrier</title>
+                        <g>
+							<rect x="1" y="13" style="fill:#ECF0F1;" width="56" height="39"></rect>
+                            <polygon style="fill:#21AE5E;" points="42,0 16,0 1,0 1,13 57,13 57,0 		"></polygon>
+                            <path style="fill:#556080;"
+                                  d="M19,46c-0.552,0-1-0.447-1-1V19c0-0.553,0.448-1,1-1s1,0.447,1,1v26C20,45.553,19.552,46,19,46z"></path>
+                            <path style="fill:#556080;" d="M13,26c-0.256,0-0.512-0.098-0.707-0.293c-0.391-0.391-0.391-1.023,0-1.414l6-6
+							c0.391-0.391,1.023-0.391,1.414,0s0.391,1.023,0,1.414l-6,6C13.512,25.902,13.256,26,13,26z"></path>
+                            <path style="fill:#556080;" d="M38,32c-3.86,0-7-3.141-7-7s3.14-7,7-7s7,3.141,7,7S41.86,32,38,32z M38,20c-2.757,0-5,2.243-5,5
+							s2.243,5,5,5s5-2.243,5-5S40.757,20,38,20z"></path>
+                            <path style="fill:#556080;" d="M38,46c-3.86,0-7-3.141-7-7c0-0.553,0.448-1,1-1s1,0.447,1,1c0,2.757,2.243,5,5,5s5-2.243,5-5V25
+							c0-0.553,0.448-1,1-1s1,0.447,1,1v14C45,42.859,41.86,46,38,46z"></path>
+						</g>
+                        <g>
+							<rect x="37" y="38" style="fill:#21AE5E;" width="22" height="22"></rect>
+                            <rect x="47" y="39.586" style="fill:#FFFFFF;" width="2" height="16"></rect>
+                            <polygon style="fill:#FFFFFF;"
+                                     points="48,57 41,50.293 42.476,48.879 48,54.172 53.524,48.879 55,50.293 		"></polygon>
+						</g>
+					</g>
+				</svg>
+            </a>
+            <div class="giggity">
+                <img src="images/giggity.png" alt="Giggity" class="logo">
+                <img src="images/qrcode.png" class="qrcode hidden" alt="Qrcode" style="top: 144.5px; left: 68.5px;">
+            </div>
+        </th>
+        <th colspan="2" data-day="1">Jeudi 27 Juin</th>
+        <th colspan="2" data-day="2">Vendredi 28 Juin</th>
+        <th colspan="2" data-day="3">Samedi 29 Juin</th>
+        <th colspan="2" data-day="4">Dimanche 30 Juin</th>
+    </tr>
+    <tr>
+        <th data-day="1">Salle cinéma</th>
+        <th data-day="1">Accueil</th>
+        <th data-day="2">Salle cinéma</th>
+        <th data-day="2">Accueil</th>
+        <th data-day="3">Salle cinéma</th>
+        <th data-day="3">Accueil</th>
+        <th data-day="4">Salle cinéma</th>
+        <th data-day="4">Accueil</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <th>10:00</th>
+        <td data-day="1"></td>
+        <td data-day="1" rowspan="4"></td>
+        <td data-day="2" rowspan="2">
+            <div class="event talk">
+                <div class="time">
+                    10:00 - 11:00
+                </div>
+                <div class="title">
+                    Dompter les trolls
+                </div>
+                <div class="author">
+                    2vanssay
+                </div>
+                <div class="description">
+                    <p>Les trolls font partie de nos vies numériques, c’est un fait, ils
+                        sont là.
+                        Comment les repérer pour mieux les ignorer, les contrer ou même les utiliser à nos propres fins&nbsp;?</p>
+
+                    <p>En m’appuyant sur le travail mené pour écrire le manuel d’autodéfense #DompterLesTrolls (Dunod),
+                        je vous propose d’envisager les différentes options qui s’offrent à nous pour ne pas laisser les
+                        trolls pourrir notre espace numérique.
+                        Nous verrons aussi comment soutenir efficacement leurs
+                        victimes et nous interrogerons sur notre propre tendance à la troll-attitude.</p>
+
+                </div>
+            </div>
+        </td>
+        <td data-day="2" rowspan="2"></td>
+        <td data-day="3" rowspan="2">
+            <div class="event ">
+                <div class="time">
+                    10:00 - 11:00
+                </div>
+                <div class="title">
+                    (En attente de confirmation)
+                </div>
+                <div class="author">
+
+                </div>
+                <div class="description">
+                    <p>(En attente de confirmation)</p>
+
+                </div>
+            </div>
+        </td>
+        <td data-day="3" rowspan="2"></td>
+        <td data-day="4" rowspan="2">
+            <div class="event talk">
+                <div class="time">
+                    10:00 - 11:00
+                </div>
+                <div class="title">
+                    Les réseaux communautaires, une autre façon de construire Internet
+                </div>
+                <div class="author">
+                    zorun
+                </div>
+                <div class="description">
+                    <p>Nous présenterons les «&nbsp;réseaux communautaires&nbsp;» (Community Networks), un mouvement
+                        mondial de réappropriation des technologies de communication.
+                        De nombreuses communautés construisent et exploitent ainsi leurs propres réseaux de
+                        communication, considérés comme des biens communs.</p>
+
+                    <p>Nous verrons comment ces communautés s’organisent sur les plans humains, financiers et
+                        techniques.
+                        Comment la Fédération FDN s’inscrit dans ce mouvement.
+                        Ainsi que les spécificités de l’approche française.</p>
+
+                    <p>Pour aller plus loin, l’audience est invitée à participer au «&nbsp;Battlemesh&nbsp;»,
+                        l’événement annuel qui rassemble cette communauté, qui a lieu cette année du 8 au 14 juillet
+                        près de Paris&nbsp;!</p>
+
+                </div>
+            </div>
+        </td>
+        <td data-day="4" rowspan="3"></td>
+    </tr>
+    <tr>
+        <th class="hidden">10:30</th>
+        <td data-day="1">
+            <div class="event misc">
+                <div class="time">
+                    10:30 - 11:00
+                </div>
+                <div class="title">
+                    Ouverture du festival
+                </div>
+                <div class="author">
+                    Équipe Pas Sage en Seine
+                </div>
+                <div class="description">
+
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <th>11:00</th>
+        <td data-day="1">
+            <div class="event talk">
+                <div class="time">
+                    11:00 - 11:30
+                </div>
+                <div class="title">
+                    Le logiciel libre a-t-il de beaux jours devant lui&nbsp;?
+                </div>
+                <div class="author">
+                    zwindler
+                </div>
+                <div class="description">
+                    <p>De barbus dans un garage jusqu’à l’ère du «&nbsp;tout sur Github&nbsp;», comment sommes-nous
+                        passés de «&nbsp;Linux est un cancer&nbsp;» à «&nbsp;Microsoft &lt;3 Linux&nbsp;»&nbsp;?</p>
+
+                    <p>Aujourd’hui, peut-on encore maintenir du code individuellement sans «&nbsp;Mettre en danger des
+                        millions d’innocents&nbsp;»&nbsp;?</p>
+
+                    <p>Faire de l’open source fait-il de vous un ZADiste&nbsp;?</p>
+
+                    <p>Tant de sujets d’actualité (et d’autres) qui seront traités avec un regard, bien entendu,
+                        totalement objectif et impartial (ou pas&nbsp;!).</p>
+
+                </div>
+            </div>
+        </td>
+        <td>
+            <div class="event talk">
+                <div class="time">
+                    11:00 - 11:30
+                </div>
+                <div class="title">
+                    Outils pour sites statiques modernes à l’intention du développeur paresseux
+                </div>
+                <div class="author">
+                    David Sferruzza
+                </div>
+                <div class="description">
+                    <p>Beaucoup de sites web n’ont pas besoin de proposer d’interactions complexes avec l’utilisateur.
+                        Des solutions comme WordPress permettent de créer de tels sites sans savoir programmer, mais ont
+                        quelques limites&nbsp;: peu de contrôle sur le code généré, lenteurs, sécurité…</p>
+
+                    <p>Ces dernières années, j’ai développé plusieurs sites pro et perso en testant diverses solutions
+                        qui n’ont pas ces problèmes&nbsp;: les générateurs de sites statiques.
+                        Je propose de partager mon expérience et de montrer qu’on peut réaliser des sites modernes avec
+                        la qualité de l’artisanat tout en permettant à des non-développeurs de les alimenter&nbsp;!</p>
+
+                </div>
+            </div>
+        </td>
+        <td rowspan="2">
+            <div class="event talk">
+                <div class="time">
+                    11:00 - 12:00
+                </div>
+                <div class="title">
+                    IndieHost&nbsp;: Hébergeur de libertés
+                </div>
+                <div class="author">
+                    Aisyk
+                </div>
+                <div class="description">
+                    <p>Qui n’a pas envie d’alternative à Google, Microsoft Office, Slack,
+                        Twitter, Youtube, ou encore Deezer&nbsp;?
+                        C’est ce que nous proposons à IndieHost.
+                        Des espaces pour partager vos fichiers, vos calendriers, vos contacts&nbsp;; des espaces pour
+                        dialoguer, collaborer, et enfin des espaces pour partager.</p>
+
+                    <p>Nous hébergeons vos libertés car nous les respectons&nbsp;: nous ne faisons pas de commerce de
+                        vos données, ou de leur traitement. Vos données vous appartiennent et vous ne devriez pas payer
+                        avec votre vie privée.</p>
+
+                </div>
+            </div>
+        </td>
+        <td rowspan="2">
+            <div class="event talk">
+                <div class="time">
+                    11:00 - 12:00
+                </div>
+                <div class="title">
+                    Les bibliothèques peuvent sauver le monde&nbsp;! Voilà comment…
+                </div>
+                <div class="author">
+                    Julie et Chloé
+                </div>
+                <div class="description">
+                    <p>Julie et Chloé se disent que les bibliothèques, loin des clichés poussiéreux, peuvent nous aider
+                        à sauver le monde, à nous organiser, à lutter, à déconstruire et à construire.</p>
+
+                    <p>Nous vous proposons ce temps d’échange avec des idées et des imaginaires engagés à découvrir et
+                        des bibliothécaires à rencontrer.</p>
+
+                </div>
+            </div>
+        </td>
+        <td rowspan="2">
+            <div class="event talk">
+                <div class="time">
+                    11:00 - 12:00
+                </div>
+                <div class="title">
+                    Dette, surendettement, et résilience
+                </div>
+                <div class="author">
+                    Atosh
+                </div>
+                <div class="description">
+                    <p>Qu'est-ce qu’une dette&nbsp;?
+                        À quoi cela sert-il d’en avoir (quel est son intérêt)&nbsp;?
+                        Qu'est-ce que le surendettement&nbsp;?
+                        Qu'est que la résilience&nbsp;?</p>
+
+                    <p>Au travers de trois contextes différents, nous verrons en quoi cette dernière notion nous
+                        permettrait de résoudre les deux premières problématiques.</p>
+
+                </div>
+            </div>
+        </td>
+        <td rowspan="2">
+            <div class="event talk">
+                <div class="time">
+                    11:00 - 12:00
+                </div>
+                <div class="title">
+                    Les 4 libertés et le Libre face à la réalité des usages modernes
+                </div>
+                <div class="author">
+                    aeris
+                </div>
+                <div class="description">
+                    <p>Les 4 libertés du Logiciel Libre ont été posées en 1986 par Richard Stallman.
+                        33 ans plus tard, soit une éternité d’un point de vue informatique, le cloud et le mobile sont
+                        dorénavant partout dans notre société.</p>
+
+                    <p>Les 4 libertés sont-elles encore réellement applicables et apportent-elles encore des garanties à
+                        l’utilisateur&nbsp;?
+                        Le Logiciel Libre tel que définit aujourd’hui est-il encore
+                        une condition nécessaire à la liberté des utilisateurs&nbsp;?</p>
+
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <th class="hidden">11:30</th>
+        <td data-day="1">
+            <div class="event talk">
+                <div class="time">
+                    11:30 - 12:00
+                </div>
+                <div class="title">
+                    🇬🇧 OSS Shaping the future of privacy
+                </div>
+                <div class="author">
+                    Cristina DeLisle
+                </div>
+                <div class="description">
+                    <p>The evolution of legal norms has centered privacy as a core value, becoming more and more
+                        relevant to keep up with the features and dynamic of technology.
+                        The recent changes brought by the EU’s GDPR have made this even more relevant, as it imposes a
+                        uniform set of rulings to be applied in a variety of ecosystems.
+                        Also, besides its versatile mechanism of enforcement, it seems that it is becoming the new
+                        unofficial standard of the future.</p>
+
+                    <p>The OSS field is well known for its concept of community formed around an OSS project, which
+                        contributes to its development as it evolves.
+                        This is maybe one of the reasons why a lot of projects have set privacy by default and by design
+                        as main ambitions, as it expresses a need of the people to have their data protected.</p>
+
+                    <p>The GDPR is undoubtedly an effective tool to raise awareness about the right to privacy,
+                        enforcing data protection principles.
+                        However, each field of activity is currently setting up best practices, which eventually will
+                        become complementary to the legal norms.</p>
+
+                    <p>This talk is about pointing out how the provisions of the GDPR apply in the OSS field and how we
+                        could analyse the model of data controller / processor in the context of OSS
+                        participants and infrastructure providers.
+                        Moreover, it will point out how privacy is and could be even more enforced by the OSS model.</p>
+
+                    <p>The examples which will stand as basis for the analysis are those of XWiki and Cryptpad.
+                        XWiki is an OSS project started 15 years ago, currently having a mature company to provide
+                        services on top of it.
+                        It involves actors from all over the world, including members of the OSS community, customers,
+                        collaborators and team members.
+                        Cryptpad, on the other hand, is a project developed with the aim of placing privacy by design as
+                        a core principle, with the use of end to end encryption for data protection.</p>
+
+                    <p>Ultimately, we all need to become more privacy aware, and whatever role we may find ourselves in,
+                        as controllers or processors of personal data, as authorities or even as data subjects, we are
+                        all participating in shaping the future of privacy.</p>
+
+                </div>
+            </div>
+        </td>
+        <td>
+            <div class="event talk">
+                <div class="time">
+                    11:30 - 12:00
+                </div>
+                <div class="title">
+                    Comprendre la langue de bois pour survivre en entreprise
+                </div>
+                <div class="author">
+                    Marie Viley &amp; Vincent Vimard
+                </div>
+                <div class="description">
+                    <p>«&nbsp;En phase de montée en charge de la compétitivité collaborative,
+                        il faut coacher les alternatives terrain.&nbsp;»
+                        Vous n’avez rien compris, nous non plus&nbsp;!</p>
+
+                    <p>Dans ce talk, nous vous montrerons grâce à des exemples comment l’information peut être manipulée
+                        afin de servir une idée ou devenir un véritable traité de «&nbsp;pipeaulogie&nbsp;».</p>
+
+                    <p>Et pour finir nous vous donnerons des conseils et des outils pour
+                        éviter de vous faire manipuler par ces informations.</p>
+
+                    <p>À la sortie de cette présentation, vous aurez appris et saurez déjouer des techniques de langue
+                        de bois et vérifier des informations pour mieux arriver à vos fins en entreprise.</p>
+
+                    <p>«&nbsp;Toute ressemblance avec des situations réelles ou avec des personnes existantes ou ayant
+                        existé est partiellement volontaire.&nbsp;»</p>
+
+                </div>
+            </div>
+        </td>
+        <td>
+            <div class="event workshop">
+                <div class="time">
+                    11:30 - 12:00
+                </div>
+                <div class="title">
+                    Un cloud souverain&nbsp;? Comment devrait-on s’y prendre&nbsp;?
+                </div>
+                <div class="author">
+                    Atosh
+                </div>
+                <div class="description">
+                    <p>Atelier essentiellement technique qui portera autour des problématiques liées à la conception
+                        d’un cloud pour les entreprises ou les particuliers.
+                        Tout en soulevant les aspects techniques, nous tenterons d’aborder les questions juridiques que
+                        cela peut poser.
+                        Amis juristes, vous êtes les bienvenus.</p>
+
+                    <p>Cet atelier prendra la forme d’un café-débat dans le but de favoriser les échanges.</p>
+
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <th>12:00</th>
+        <td data-day="1" rowspan="2">
+            <div class="event talk">
+                <div class="time">
+                    12:00 - 13:00
+                </div>
+                <div class="title">
+                    La (vraie) prescription des infractions «&nbsp;cyber&nbsp;»
+                </div>
+                <div class="author">
+                    luckylex
+                </div>
+                <div class="description">
+                    <p>La prescription de l’action publique est le délai fixé par la loi après lequel une infraction ne
+                        peut plus faire l’objet de poursuites pénales, aka «&nbsp;pas vu, pas pris&nbsp;».</p>
+
+                    <p>Mais cette lecture simpliste doit être nuancée au regard de la
+                        complexité des dispositions applicables (sécurité intérieure, blanchiment, infraction occulte,
+                        etc.).</p>
+
+                    <p>L’objet de ce talk est d’exposer les délais réels avec lesquels il faut compter en matière de
+                        cybercriminalité (à l’heure actuelle).</p>
+
+                </div>
+            </div>
+        </td>
+        <td data-day="1" rowspan="2">
+            <div class="event talk">
+                <div class="time">
+                    12:00 - 13:00
+                </div>
+                <div class="title">
+                    Le libre au service de la transition
+                </div>
+                <div class="author">
+                    Imago
+                </div>
+                <div class="description">
+                    <p>Imago est une plateforme vidéo dédiée à la transition.
+                        Nous essayons de mettre en oeuvre les outils du libre au service de la transition.
+                        Des dons en Ğ1, un code open source (open data), la promotion de l’open access, des Creative
+                        Commons et de plateformes comme Peertube ou Wetube, Imago a été inspiré par l’oeuvre
+                        d’Aaron Swartz et la création de Wikipédia.</p>
+
+                </div>
+            </div>
+        </td>
+        <td rowspan="2">
+            <div class="event talk">
+                <div class="time">
+                    12:00 - 13:00
+                </div>
+                <div class="title">
+                    Codeur-se-s de tous pays, unissez-vous
+                </div>
+                <div class="author">
+                    En Liberté Codeur-se-s
+                </div>
+                <div class="description">
+                    <p>C’est un constat souvent partagé dans le monde du logiciel, et encore plus du logiciel libre&nbsp;:
+                        il est difficile de trouver un travail avec à la fois des bonnes conditions de travail et des
+                        projets qui ont du sens.</p>
+
+                    <p>Nous ne voulons pas travailler pour des banques, la fabrication d’armes ni accompagner la
+                        précarisation de certains travailleurs. Nous voulons faire du logiciel libre, de l’open data
+                        et participer aux communs.</p>
+
+                    <p>Nous ne voulons pas être subordonnés à une hiérarchie maximisant la valorisation du capital.
+                        Nous exigeons d’être maître de notre temps de travail et pouvoir dire «&nbsp;non&nbsp;», pour le
+                        bien de la société et de notre santé.</p>
+
+                    <p>Pour beaucoup de gens, la réponse passe par le fait de devenir indépendant pour avoir la liberté
+                        de choisir ses projets et façon de travailler.
+                        Mais cela a d’autres inconvénients&nbsp;: un manque de couverture sociale (pas de CDI), un
+                        travail parfois très solitaire.</p>
+
+                    <p>À Codeurs en Liberté, nous avons monté une coopérative en tordant les cadres juridiques pour nous
+                        permettre de faire un travail d’indépendant, au sein d’un collectif.
+                        On est donc indépendants à plusieurs, on partage les taches administratives, et on essaie
+                        d’aller plus loin que ça en soutenant des projets que nous trouvons important.</p>
+
+                    <p>On propose de vous expliquer le pourquoi du comment dans une présentation.</p>
+
+                </div>
+            </div>
+        </td>
+        <td rowspan="2">
+            <div class="event talk">
+                <div class="time">
+                    12:00 - 13:00
+                </div>
+                <div class="title">
+                    Hackez le Management avec Agillité
+                </div>
+                <div class="author">
+                    Winael
+                </div>
+                <div class="description">
+                    <p>«&nbsp;Le Management&nbsp;».
+                        Il est souvent synonyme d’une machine qui broie et aliène le salarié pour les besoins du Capital
+                        pour les détracteurs du Néolibéralisme.
+                        Et s’il était possible de s’organiser autrement, de remettre l’Humain et le BSC (Bon Sens
+                        Commun) au cœur de l’entreprise.
+                        Plongez au cœur de l’Agilité et découvrez l’entreprise humaine, groupe social composé de gens
+                        tout comme vous.</p>
+
+                </div>
+            </div>
+        </td>
+        <td></td>
+        <td rowspan="2">
+            <div class="event workshop">
+                <div class="time">
+                    12:00 - 13:00
+                </div>
+                <div class="title">
+                    Démonstration de calligraphie latine
+                </div>
+                <div class="author">
+                    Delphine M.
+                </div>
+                <div class="description">
+                    <p>Je pratique à titre de loisir la calligraphie.
+                        Je prends des textes que j’aime et j’en fais des interprétations personnelles et modernes.
+                        Pour en arriver là, j’ai suivi des cours de calligraphie latine et je vous propose de vous
+                        partager les premières clés.
+                        Le matériel et la posture, mais aussi l’état d’esprit et la sérénité que cela m’apporte.</p>
+
+                </div>
+            </div>
+        </td>
+        <td>
+            <div class="event talk">
+                <div class="time">
+                    12:00 - 12:30
+                </div>
+                <div class="title">
+                    Pourquoi le logiciel libre n’est pas populaire
+                </div>
+                <div class="author">
+                    Shibia
+                </div>
+                <div class="description">
+                    <p>Les erreurs de communication de la majorité des logiciels libres pour parler au grand public.
+                        De la guerre de clocher interne aux interfaces peu intuitives, et au comportement souvent
+                        sectaire de la communauté, tout ce qu’il faut changer pour se battre face au marketing d’un
+                        Crosoft ou d’un Apple.</p>
+
+                </div>
+            </div>
+        </td>
+        <td rowspan="4">
+            <div class="event workshop">
+                <div class="time">
+                    12:00 - 14:00
+                </div>
+                <div class="title">
+                    Cartographie avec QGIS et données géospatiales open source
+                </div>
+                <div class="author">
+                    Bakaniko
+                </div>
+                <div class="description">
+                    <p>Le but de cet atelier est de donner les rudiments de cartographie aux utilisateurs (particuliers,
+                        associatifs, pro) à l’aide du logiciel QGIS et de données libres.</p>
+
+                    <p>(L’installation de QGIS est à la charge de l’utilisateur)</p>
+
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <th class="hidden">12:30</th>
+        <td>
+            <div class="event talk">
+                <div class="time">
+                    12:30 - 13:00
+                </div>
+                <div class="title">
+                    L’avènement des consoles de jeux open-source
+                </div>
+                <div class="author">
+                    TkPx
+                </div>
+                <div class="description">
+                    <p>Depuis quelques années, on trouve sur internet et dans les makerspaces des consoles en kit.
+                        Quoi de plus existant et gratifiant que de monter sa propre console et créer ses propres jeux,
+                        pour ensuite les partager à une communauté mondiale&nbsp;!
+                        Nous sommes peut-être au début d’une nouvelle façon de créer et de
+                        jouer.</p>
+
+                    <p>Hack, émulation, logiciels dédiés à la création de jeux et matériels open permettant de fabriquer
+                        tout et n’importe quoi, puis arrivée des consoles open-source.</p>
+
+                    <p>Petit saut dans l’histoire du jeu vidéo tout en surfant sur le déploiement des fablabs et autres
+                        makerspaces partout dans le monde.
+                        Cette nouvelle façon de créer va-t-elle influencer les géants du jeu vidéo&nbsp;?</p>
+
+                </div>
+            </div>
+        </td>
+        <td>
+            <div class="event talk">
+                <div class="time">
+                    12:30 - 13:00
+                </div>
+                <div class="title">
+                    Ce que la littérature de science-fiction peut nous apprendre de l’informatique actuelle
+                </div>
+                <div class="author">
+                    Shibia
+                </div>
+                <div class="description">
+                    <p>Tout est dans le titre :)</p>
+
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <th>13:00</th>
+        <td data-day="1" rowspan="2">
+            <div class="event talk">
+                <div class="time">
+                    13:00 - 14:00
+                </div>
+                <div class="title">
+                    Le lobbying des écosystèmes d’ayants-droit en France et UE vs Internet
+                </div>
+                <div class="author">
+                    Pierre Beyssac &amp; Marc Rees
+                </div>
+                <div class="description">
+                    <p>Un retour sur la directive copyright (qui sera probablement pliée d’ici PSES) + autres lois à la
+                        con + la situation verrouillée politiquement et médiatiquement en France sur ces sujets +
+                        l’effet sur les services Internet (communautaires et commerciaux, au-delà des GAFA)</p>
+
+                </div>
+            </div>
+        </td>
+        <td data-day="1">
+            <div class="event talk">
+                <div class="time">
+                    13:00 - 13:30
+                </div>
+                <div class="title">
+                    Opération LineageOS&nbsp;: retour d’expérience.
+                </div>
+                <div class="author">
+                    etchevef
+                </div>
+                <div class="description">
+                    <p>Retour d’expérience sur mes tentatives pour libérer mon téléphone sous Android, mes réussites,
+                        mes échecs, et ce que j’ai pu apprendre sur le chemin.</p>
+
+                    <p>Au programme&nbsp;:</p>
+
+                    <ul>
+                        <li>Pourquoi j’ai «&nbsp;volontairement&nbsp;» installé un malware sur mon téléphone.</li>
+                        <li>Comment j’ai fait plus confiance à un inconnu sur internet qu’à une entreprise bien
+                            connue.
+                        </li>
+                        <li>Mon top des sites d’information sur le sujet. Le quatrième va vous surprendre.</li>
+                        <li>Les bonnes (non) pratiques d’un fabricant français.</li>
+                    </ul>
+
+                </div>
+            </div>
+        </td>
+        <td rowspan="2">
+            <div class="event talk">
+                <div class="time">
+                    13:00 - 14:00
+                </div>
+                <div class="title">
+                    CryptPad, une alternative pour la collaboration chiffrée de bout en bout
+                </div>
+                <div class="author">
+                    Dubost Ludovic
+                </div>
+                <div class="description">
+                    <p>Le projet CryptPad a été présenté en 2017 à Pas Sage en Seine.</p>
+
+                    <p>Depuis, son objectif est resté le même d’offrir une alternative chiffrée aux solutions de
+                        collaboration cloud non chiffrées.</p>
+
+                    <p>Par contre, le logiciel CryptPad et le service CryptPad.fr ont été très largement améliorés, et
+                        les usages ne cessent de progresser.
+                        Le projet a aussi reçu un prix Européen (le NGI Privacy and Trust Enhancing Technology
+                        award).</p>
+
+                    <p>L’objectif de cette conférence est de revenir présenter pourquoi et comment le projet libre
+                        CryptPad a été créé et ou nous en
+                        sommes dans son développement, son adoption ainsi que de son financement.</p>
+
+                    <p>Nous présenterons les nouvelles fonctionnalités disponibles dans CryptPad et partagerons avec
+                        l’audience de PSES la roadmap du projet sur la prochaine année et les idées que nous avons pour
+                        le futur plus lointain du projet.</p>
+
+                </div>
+            </div>
+        </td>
+        <td rowspan="2">
+            <div class="event talk">
+                <div class="time">
+                    13:00 - 14:00
+                </div>
+                <div class="title">
+                    libre.sh&nbsp;: déployer des applications avec kubernetes
+                </div>
+                <div class="author">
+                    unteem
+                </div>
+                <div class="description">
+                    <p>Vous souhaitez déployer des applications libres et open source à large
+                        ou petite échelle&nbsp;?
+                        Libre.sh est fait pour vous.
+                        IndieHost vous propose de partager son expérience dans la mise en place d’un cluster kubernetes
+                        et sa migration depuis docker-compose. Libre.sh c’est aussi une invitation à collaborer sur des
+                        «&nbsp;operators&nbsp;»
+                        et des paquets d’applications «&nbsp;opportunistiques&nbsp;» pour standardiser le déploiement
+                        quel que soit le contexte. Nous verrons ensuite les enjeux d’un «&nbsp;souk&nbsp;» pour le
+                        réseau des LibreHosters.</p>
+
+                </div>
+            </div>
+        </td>
+        <td rowspan="2">
+            <div class="event talk">
+                <div class="time">
+                    13:00 - 14:00
+                </div>
+                <div class="title">
+                    Changer le monde, un ego à la fois
+                </div>
+                <div class="author">
+                    Pouhiou
+                </div>
+                <div class="description">
+                    <p>Je suis entré dans le librisme en m’intéressant aux auteur·ices et
+                        leurs droits. J’ai travaillé des années sur l’hégémonie des géants du web.</p>
+
+                    <p>Je peux résumer le deal qui est proposé à chaque fois en trois mots&nbsp;: Confort Contre
+                        Contrôle.
+                        Ma liberté résumée à un choix illusoire entre X et Y.
+                        Le libre arbitre comme un morceau de sucre pour faire passer le contrôle sur nos actions.</p>
+
+                    <p>Et si «&nbsp;je&nbsp;» sortais de ma petite individualité pour imaginer ce qu’on pourra faire
+                        lorsqu’on sera «&nbsp;nous&nbsp;»&nbsp;?</p>
+
+                </div>
+            </div>
+        </td>
+        <td rowspan="2">
+            <div class="event talk">
+                <div class="time">
+                    13:00 - 14:00
+                </div>
+                <div class="title">
+                    Trucs et astuces pour diffuser, éditer, publier des vidéos et podcast.
+                </div>
+                <div class="author">
+                    ObiWanKennedy
+                </div>
+                <div class="description">
+                    <p>Je vais présenter l’ensemble des outils que j’utilise quotidiennement pour produire des vidéos et
+                        podcast audio.</p>
+
+                    <p>En retraçant ma démarche, nous verrons toutes les étapes de la production de vidéo.
+                        De la promotion du live, l’enregistrement, l’édition de la vidéo, l’extraction du son, l’upload
+                        automatisé sur différentes plateformes, la promotion des médias publiés, la rediffusion.</p>
+
+                    <p>Ensuite, nous pourrons discuter des alternatives, des améliorations du processus et du futur.</p>
+
+                    <p>La présentation sera assez technique&nbsp;: python, bash principalement.</p>
+
+                </div>
+            </div>
+        </td>
+        <td rowspan="2">
+            <div class="event talk">
+                <div class="time">
+                    13:00 - 14:00
+                </div>
+                <div class="title">
+                    Android fuite de vos données avec peu de permissions (jamais la vôtre)
+                </div>
+                <div class="author">
+                    Schoumi
+                </div>
+                <div class="description">
+                    <p>En utilisant une application écrite spécialement pour les besoins de la conférence on va ensemble
+                        voir quelles données sont accessibles aux applications avec peu de permission et à quel point
+                        votre smartphone Android peut être assez peu discret niveau vie privée auprès de gens peu
+                        scrupuleux.</p>
+
+                    <p>Pour cela on va partir des permissions les plus demandées par les applications et voir peu à peu
+                        ce que chacune permet de savoir de vous/vos habitudes et celles transmises à votre insu.</p>
+
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <th class="hidden">13:30</th>
+        <td data-day="1">
+            <div class="event talk">
+                <div class="time">
+                    13:30 - 14:00
+                </div>
+                <div class="title">
+                    J’ai demandé mes données personnelles grâce au RGPD
+                </div>
+                <div class="author">
+                    Augusti Antoine
+                </div>
+                <div class="description">
+                    <p>Le RGPD est entré en application en France fin mai 2018.
+                        Depuis, j’ai exercé mon droit d’accès à mes données auprès de plusieurs entreprises et j’ai
+                        appris sur moi-même.</p>
+
+                    <p>Je propose de présenter les démarches à suivre pour obtenir ses données, les analyses de mes
+                        données obtenues auprès de Trainline (billets de train), Monoprix (supermarché) et mes
+                        recherches Google.</p>
+
+                    <p>Enfin, je termine avec une ouverture sur le futur de l’accès et la portabilité des données.</p>
+
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <th>14:00</th>
+        <td data-day="1" rowspan="2">
+            <div class="event talk">
+                <div class="time">
+                    14:00 - 15:00
+                </div>
+                <div class="title">
+                    La stratégie des applications pour nous rendre accro à leurs produits
+                </div>
+                <div class="author">
+                    Sabine Condiescu
+                </div>
+                <div class="description">
+                    <p>À l’ère de l’instantanéité où utiliser des applications en tout genre est véritablement ancrée
+                        dans notre quotidien, nous tenterons de voir comment certaines fonctionnalités sont pensées et
+                        conçues de manière à faire revenir l’utilisateur toujours plus et toujours mieux.</p>
+
+                    <p>C’est en s’appuyant principalement sur les applications de messageries instantanées que
+                        j’aimerais démontrer la façon dont notre dopamine est stimulée de manière à nous rendre accros
+                        aux produits.</p>
+
+                    <p>En tant que designer UX, je pense qu’il est devenu indispensable d’être conscient de certains
+                        enjeux, de façon à tendre vers des conceptions plus éthique et plus respectueuse de
+                        l’utilisateur.</p>
+
+                </div>
+            </div>
+        </td>
+        <td data-day="1" rowspan="4">
+            <div class="event talk">
+                <div class="time">
+                    14:00 - 16:00
+                </div>
+                <div class="title">
+                    La domotique et le libre
+                </div>
+                <div class="author">
+                    hoper
+                </div>
+                <div class="description">
+                    <p>Présentation des protocoles sans fil dédiés domotique, de jeedom et, si tout se passe bien, de
+                        son interconnexion avec la reconnaissance vocale locale proposée par Snips.</p>
+
+                    <p>J’essayerai aussi de venir avec le matériel nécessaire pour faire des démos en live…</p>
+
+                </div>
+            </div>
+        </td>
+        <td rowspan="2">
+            <div class="event talk">
+                <div class="time">
+                    14:00 - 15:00
+                </div>
+                <div class="title">
+                    Architecture hexagonale
+                </div>
+                <div class="author">
+                    Pauline
+                </div>
+                <div class="description">
+                    <p>Dans les SI d’entreprises les technologies évoluent vite. Au contraire, ce qui ne bouge pas,
+                        c’est le métier.</p>
+
+                    <p>Mais alors comment faire pour avoir des applications toujours à jour sans impacter le métier&nbsp;?
+                        Comment faire des migrations
+                        moins douloureuses&nbsp;?</p>
+
+                    <p>Inspiré par le travail d’Alistair Cockburn à propos
+                        de l’architecture hexagonale, ce talk vise à présenter ses concepts, et les problématiques
+                        associées.</p>
+
+                    <p>La seule constante du numérique étant le changement, venez découvrir des principes faciles à
+                        mettre en oeuvre, avec des exemples, pour découpler votre code métier et développer des
+                        applications capables de supporter le changement constant.</p>
+
+                </div>
+            </div>
+        </td>
+        <td>
+            <div class="event talk">
+                <div class="time">
+                    14:00 - 14:30
+                </div>
+                <div class="title">
+                    Transformez vos A en quadruple A
+                </div>
+                <div class="author">
+                    TAlone
+                </div>
+                <div class="description">
+                    <p>Un rapide état des lieux d’IPv6 aujourd’hui, et un petit guide pour
+                        les sysadmins frileux qui ne s’y seraient pas encore mis.
+                        Le tout illustré, afin de transformer un enregistrement A… en quadruple A, et passer en direct
+                        un site à IPv6.</p>
+
+                </div>
+            </div>
+        </td>
+        <td rowspan="2">
+            <div class="event talk">
+                <div class="time">
+                    14:00 - 15:00
+                </div>
+                <div class="title">
+                    Terrorisme et médias&nbsp;: couple indissociable&nbsp;?
+                </div>
+                <div class="author">
+                    Nicolas Quénel
+                </div>
+                <div class="description">
+                    <p>Comment les organisations terroristes se sont adaptées aux évolutions médiatiques et à
+                        l’émergence des réseaux sociaux&nbsp;?
+                        Pourquoi les partisans d’une ligne dure contre le terrorisme favorisent ce dernier plus qu’ils
+                        ne le combattent&nbsp;? Comment diffuser une information sans faire le jeu des organisations
+                        terroristes&nbsp;?</p>
+
+                    <p>Autant de questions auxquelles nous essayerons de répondre et qui engagent, au quotidien, chaque
+                        citoyen dans son utilisation des réseaux sociaux.</p>
+
+                </div>
+            </div>
+        </td>
+        <td rowspan="4">
+            <div class="event workshop">
+                <div class="time">
+                    14:00 - 16:00
+                </div>
+                <div class="title">
+                    Atelier de fabrication d’une console open source
+                </div>
+                <div class="author">
+                    TkPx
+                </div>
+                <div class="description">
+                    <p>Atelier de fabrication d’une mini-console de jeux open-source, la
+                        petit Kitco</p>
+
+                    <p>Atelier pour construire sa propre console de jeu portable en kit&nbsp;!
+                        Le premier intérêt est de découvrir comment fonctionne une console, en assemblant les pièces
+                        soit-même.
+                        Il suffit d’avoir un fer à souder et de suivre le tuto.
+                        Débutants bienvenus&nbsp;!</p>
+
+                    <p>La console est fournie avec un jeu pré-chargé.
+                        Il est possible de faire tourner des petits jeux rétro comme Pacman, Tetris, ou le casse-brique.
+                        Il est également possible de créer ses propres jeux, en utilisant
+                        le logiciel Arduino.</p>
+
+                    <p>Il faut environ 1H30 pour souder l’ensemble des éléments de la console.</p>
+
+                    <p>Chaque participant repart chez lui avec sa console&nbsp;!</p>
+
+                    <p>NB&nbsp;: atelier <strong>sur inscriptions uniquement</strong> et places limitées, prévoir
+                        <strong>10€</strong> pour le coût du kit à souder.</p>
+
+                </div>
+            </div>
+        </td>
+        <td rowspan="4">
+            <div class="event talk">
+                <div class="time">
+                    14:00 - 16:00
+                </div>
+                <div class="title">
+                    La Fédération FDN et la fibre optique. Enjeux et perspectives de l’Internet associatif en haut
+                    débit.
+                </div>
+                <div class="author">
+                    quota_atypique
+                </div>
+                <div class="description">
+                    <p>Depuis presque deux ans, la Fédération FDN travaille sur la question de l’accès des petits
+                        opérateurs associatifs aux réseaux en fibre optique.</p>
+
+                    <p>La sortie de notre <a href="https://fibre.ffdn.org/">Baromètre FTTH</a> est l’occasion de faire
+                        le point sur cette action.</p>
+
+                    <p>Quels sont les enjeux, pourquoi investir ces réseaux&nbsp;?
+                        Quel travail a été mené&nbsp;?
+                        Quels sont les premiers résultats&nbsp;?</p>
+
+                </div>
+            </div>
+        </td>
+        <td rowspan="4">
+            <div class="event workshop">
+                <div class="time">
+                    14:00 - 16:00
+                </div>
+                <div class="title">
+                    Cérémonie des bâtards de la donnée
+                </div>
+                <div class="author">
+                    Shaft &amp; XavCC
+                </div>
+                <div class="description">
+                    <p>Jury des idiot·e·s du village (à composer sur place ou en amont) qui récompensera les plus grands
+                        bâtards de la donnée 2019.</p>
+
+                    <p>Les télés ont leurs Gérards, les films ont leurs Nanars. Nous on a les bâtards.
+                        Un an après l’arrivé du RGPD c’est « Bienvenue en logorrhée&nbsp;», si certaines boites ont
+                        changé leurs pratiques, beaucoup ne l’ont pas fait.
+                        Les données il y en y a qui les mystifient, nous en leur en fait un jury presque sans
+                        parodie.</p>
+
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <th class="hidden">14:30</th>
+        <td>
+            <div class="event talk">
+                <div class="time">
+                    14:30 - 15:00
+                </div>
+                <div class="title">
+                    Traçage Wi-Fi et Bluetooth
+                </div>
+                <div class="author">
+                    Célestin Matte
+                </div>
+                <div class="description">
+                    <p>Depuis quelques années se répandent des systèmes de traçage physique, se servant de la facilité
+                        de détection des appareils Wi-Fi et Bluetooth proches.
+                        On parlera de ces systèmes de traçage physique Wi-Fi et Bluetooth&nbsp;: les aspects techniques,
+                        les conséquences sur la vie privée, l’aspect légal, que faire pour s’en protéger…</p>
+
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <th>15:00</th>
+        <td data-day="1" rowspan="2">
+            <div class="event talk">
+                <div class="time">
+                    15:00 - 16:00
+                </div>
+                <div class="title">
+                    Le non-logiciel libre par l’exemple
+                </div>
+                <div class="author">
+                    TAlone
+                </div>
+                <div class="description">
+                    <p>Entre le manque de documentation, les dépendances cachées et le brevet logiciel, regardons en
+                        face les problèmes de certains logiciels dits «&nbsp;libres&nbsp;» et tentons de montrer qu’ils
+                        ne sont finalement pas si libres qu’ils en ont l’air…</p>
+
+                    <p>En particulier, voyons l’exemple de LibreOffice Online, qui concentre beaucoup des problèmes
+                        possibles à ce niveau, et étudions pourquoi le projet a fini comme il est aujourd’hui.</p>
+
+                </div>
+            </div>
+        </td>
+        <td rowspan="2">
+            <div class="event talk">
+                <div class="time">
+                    15:00 - 16:00
+                </div>
+                <div class="title">
+                    Tout ce qu’il ne faut pas faire sur un SI en entreprise…
+                </div>
+                <div class="author">
+                    Alexander WAYNE
+                </div>
+                <div class="description">
+                    <p>Et bien sûr ce que personne ne fait…</p>
+
+                    <p>Dans une volonté de pédagogie, de partage et d’amélioration des connaissances dans les bases de
+                        la sécurité d’un système informatique d’entreprise (SI), petit tour des mauvaises pratiques ou
+                        absence de pratiques que l’on retrouve sur les SI d’entreprises.</p>
+
+                    <p>Sur fond de rappel des bonnes pratiques d’hygiène numérique (Beaucoup de règles
+                        évidentes mais si cette conférence existe…).</p>
+
+                    <p>Public visé : du technicien de support à l’administrateur système et réseau, du DSI en passant
+                        par le RSSI, du développeur au devops, toute personne un tant soit peu curieuse.</p>
+
+                    <p>Conférence non technique et généraliste.</p>
+
+                </div>
+            </div>
+        </td>
+        <td rowspan="2">
+            <div class="event talk">
+                <div class="time">
+                    15:00 - 16:00
+                </div>
+                <div class="title">
+                    DoT, DoH&nbsp;: le DNS et le chiffrement
+                </div>
+                <div class="author">
+                    Shaft
+                </div>
+                <div class="description">
+                    <p>Le DNS, infrastructure essentielle d’Internet et traditionnellement un des maillons faibles en
+                        termes de vie privée, est désormais armé pour le chiffrement d’une partie de son trafic.
+                        Voyons voir ce qu’il en est, quelles sont les limites et comment le pratiquer</p>
+
+                </div>
+            </div>
+        </td>
+        <td rowspan="2">
+            <div class="event talk">
+                <div class="time">
+                    15:00 - 16:00
+                </div>
+                <div class="title">
+                    Les projets ludopédagogiques numériques du Gamixlab
+                </div>
+                <div class="author">
+                    Gamixlab
+                </div>
+                <div class="description">
+                    <p>Notre conférence vous propose de présenter les projets ludopédagogiques numériques menés au sein
+                        du fablab Gamixlab par les étudiant·e·s du campus Saint-Simon de l’université Paris-Est Créteil
+                        (UPEC).</p>
+
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <th class="hidden">15:30</th>
+    </tr>
+    <tr>
+        <th>16:00</th>
+        <td data-day="1">
+            <div class="event talk">
+                <div class="time">
+                    16:00 - 16:30
+                </div>
+                <div class="title">
+                    Handicap et accessiblité&nbsp;: quelques repères
+                </div>
+                <div class="author">
+                    Stéphane Deschamps
+                </div>
+                <div class="description">
+                    <p>Souvent en entreprise «&nbsp;les personnes handicapées&nbsp;» est une espèce
+                        de segment démographique fantôme.</p>
+
+                    <p>Nous ferons un peu d’étude démographique, parlerons de cas concrets, et en profiterons pour
+                        aborder la nécessité de l’accessibilité.</p>
+
+                    <p>Attendez-vous à faire des votes à main levée, c’est vous dire si ce sera une conférence
+                        immersive.</p>
+
+                </div>
+            </div>
+        </td>
+        <td data-day="1" rowspan="2">
+            <div class="event talk">
+                <div class="time">
+                    16:00 - 17:00
+                </div>
+                <div class="title">
+                    Méthodes formelles, mais quoi donc est-ce&nbsp;?
+                </div>
+                <div class="author">
+                    Lesly &amp; Florent
+                </div>
+                <div class="description">
+                    <p>Des techniques existent pour s’assurer mathématiquement qu’un programme informatique, ou système
+                        au sens large, se comporte comme on l’attend. On les regroupe sous le terme «&nbsp;méthodes
+                        formelles&nbsp;».
+                        Elles permettent de spécifier les comportements acceptables en vue de concevoir des systèmes
+                        plus sûrs ou bien de prouver que des systèmes existants le sont.</p>
+
+                    <p>Nous proposons un tour d’horizon de quelques-unes de ces techniques à destination du
+                        professionnel ou du simple curieux.</p>
+
+                </div>
+            </div>
+        </td>
+        <td>
+            <div class="event talk">
+                <div class="time">
+                    16:00 - 16:30
+                </div>
+                <div class="title">
+                    Apiculture en amateur
+                </div>
+                <div class="author">
+                    Troupier
+                </div>
+                <div class="description">
+                    <p>Présentation de l’apiculture, de l’abeille, des ruches
+                        Produits de la ruche et utilités
+                        Aspects sécurité et réglementation</p>
+
+                </div>
+            </div>
+        </td>
+        <td>
+            <div class="event talk">
+                <div class="time">
+                    16:00 - 16:30
+                </div>
+                <div class="title">
+                    Dématérialisation, révolution ou déception
+                </div>
+                <div class="author">
+                    Nanar de Nanardon
+                </div>
+                <div class="description">
+                    <p>Qu'on parle de démarche administrative, d’achat, de publicité, ou même de documents
+                        réglementaires la tendance suit clairement le chemin du tout numérique.
+                        La dématérialisation ne manque d’avantages, mais mal utilisée elle peut tourner à la
+                        catastrophe.
+                        Faisons un point sur ce qui marche et qui marche moins bien et voyons si les objectifs sont
+                        réellement atteints.</p>
+
+                </div>
+            </div>
+        </td>
+        <td rowspan="2">
+            <div class="event talk">
+                <div class="time">
+                    16:00 - 17:00
+                </div>
+                <div class="title">
+                    Qui tient la plume&nbsp;?
+                </div>
+                <div class="author">
+                    Tris
+                </div>
+                <div class="description">
+                    <p>En théorie, la répartition des tâches entre le législateur et l’exécutif est clairement définie
+                        par notre Constitution.
+                        Mais, en pratique&nbsp;?</p>
+
+                    <p>Qui tient la plume de celui qui fait la loi&nbsp;?
+                        Qui rédige&nbsp;?
+                        Qui influence et comment&nbsp;?
+                        Comment identifier ce qui relève d’une influence extérieure et qui ne dit pas son nom&nbsp;?
+                        Comment les autres missions sont-elles influencées par l’extérieur&nbsp;?</p>
+
+                </div>
+            </div>
+        </td>
+        <td rowspan="2">
+            <div class="event talk">
+                <div class="time">
+                    16:00 - 17:00
+                </div>
+                <div class="title">
+                    MuseScore – La notation musicale libre pour tous
+                </div>
+                <div class="author">
+                    skunt
+                </div>
+                <div class="description">
+                    <p>Présentation de MuseScore, l’éditeur de partitions musicales open
+                        source et gratuit le plus utilisé dans le monde, traduit en 64 langues et téléchargé chaque
+                        jours des milliers de fois.</p>
+
+                    <p>Musescore n’est pas qu’un logiciel, mais un ensemble de solutions qui s’inscrivent toutes dans
+                        l’esprit du logiciel libre&nbsp;: rendre accessible un travail commun, ici pour faciliter la
+                        production et le partage de la musique.</p>
+
+                    <p>Historique
+                        Qui peut faire quoi (écrire, lire, apprendre, jouer, partager la musique)
+                        l’éco-système (site web, appli mobile, version portable…)
+                        Présentation du logiciel</p>
+
+                </div>
+            </div>
+        </td>
+        <td rowspan="2">
+            <div class="event talk">
+                <div class="time">
+                    16:00 - 17:00
+                </div>
+                <div class="title">
+                    ContactezMoi.exe
+                </div>
+                <div class="author">
+                    owo &amp; uwu
+                </div>
+                <div class="description">
+                    <p>De nos jours, lorsque deux individus humanoïdes (ou plus) se rencontrent dans la Matrice, il leur
+                        arrive de vouloir rester en contact à leur retour dans le meatspace.
+                        Pour ce faire, c’est très simple&nbsp;: il leur suffit de se retrouver
+                        sur Teleg… Sky… Disco… WhatsA… TeamSp… Mum… IR… Mast… Twit… Faceb… Keyba…</p>
+
+                    <p>Bon, ok, il est peut-être temps de démêler tout ça. Vu que c’est un sacré bazar, on va tout
+                        reprendre depuis le début. Ça vous tente de disrupter la communication&nbsp;à l’ère d’Elon Musk&nbsp;?</p>
+
+                </div>
+            </div>
+        </td>
+        <td rowspan="4">
+            <div class="event workshop">
+                <div class="time">
+                    16:00 - 18:00
+                </div>
+                <div class="title">
+                    Libérez vos appareils&nbsp;!
+                </div>
+                <div class="author">
+                    fallstar
+                </div>
+                <div class="description">
+                    <p>Venez apprendre à libérer vos appareils&nbsp;!
+                        Que vous souhaitiez vous passer de Windows, des produits des GAFAM, des outils Google sur
+                        Android ou plus généralement améliorer votre hygiène numérique, nous serons là pour vous
+                        accompagner.</p>
+
+                    <p>Au programme&nbsp;: Install party GNU/Linux sur PC, LineageOS sur smartphone, introduction au
+                        chiffrement avec PGP, utilisation pour les mails avec Thunderbird et Enigmail ou K9 et
+                        OpenKeyChain…</p>
+
+                    <p>Et adoption de CHATONS&nbsp;!</p>
+
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <th class="hidden">16:30</th>
+        <td data-day="1">
+            <div class="event talk">
+                <div class="time">
+                    16:30 - 17:00
+                </div>
+                <div class="title">
+                    Monitorer nos locaux avec de l’IoT, un peu de PHP et du influxDB
+                </div>
+                <div class="author">
+                    pyrech
+                </div>
+                <div class="description">
+                    <p>Lors d’un hackday interne à JoliCode, nous avons mis en place un système de monitoring pour
+                        connaître en temps réel l’état de nos locaux.</p>
+
+                    <p>Quelqu’un a-t-il oublié d’éteindre les lumières&nbsp;?
+                        Les portes sont-elles toutes fermées correctement&nbsp;?</p>
+
+                    <p>Nous verrons notamment les capteurs que nous avons mis en place, comment nous collectons les
+                        données et comment nous les mettons en forme sur un dashboard maison.</p>
+
+                </div>
+            </div>
+        </td>
+        <td>
+            <div class="event talk">
+                <div class="time">
+                    16:30 - 17:00
+                </div>
+                <div class="title">
+                    3 techniques faciles de manipulation
+                </div>
+                <div class="author">
+                    Marie Viley
+                </div>
+                <div class="description">
+                    <p>Qui ne s’est jamais fait manipuler&nbsp;?
+                        Évidemment, on est tous allé à une soirée alors qu’on en avait pas envie, on a tous acheté un
+                        truc sans en avoir besoin et on a tous été influencé par ses proches.</p>
+
+                    <p>L’idée de cette présentation est de vous ouvrir les yeux sur les relations et les influences
+                        entre les gens. Je vous exposerai les mécanismes de prise de décision au travers de 3 techniques
+                        simples de manipulation.</p>
+
+                    <p>A la sortie de ce talk, vous devriez être moins influençable et maître de vos décisions (voire
+                        manipuler les autres).</p>
+
+                </div>
+            </div>
+        </td>
+        <td>
+            <div class="event talk">
+                <div class="time">
+                    16:30 - 17:00
+                </div>
+                <div class="title">
+                    Accessibilité
+                </div>
+                <div class="author">
+                    Armony Altinier
+                </div>
+                <div class="description">
+                    <p>(à définir)</p>
+
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <th>17:00</th>
+        <td data-day="1" rowspan="2">
+            <div class="event talk">
+                <div class="time">
+                    17:00 - 18:00
+                </div>
+                <div class="title">
+                    Mes mots de passe sécurisés et faciles à gérer
+                </div>
+                <div class="author">
+                    Delphine M.
+                </div>
+                <div class="description">
+                    <p>S’il y a bien une chose qui protège nos comptes et notre vie numérique,
+                        ce sont nos mots de passe. S’il y a bien une chose qui fuite, qui se hacke où
+                        qui se retrouve visible par tous sur un post-it… ce sont nos mots de passe&nbsp;!</p>
+
+                    <p>Mais qu’est-ce qui fait qu’un mot de passe est bon&nbsp;?
+                        Comment gérer facilement ses mots de passe&nbsp;?
+                        Comment m’en sortir sans avoir des <code>)k#Qhg`S\MEB!m"(h:2qT2,@</code> à retenir&nbsp;?</p>
+
+                    <p>En fait, gérer efficacement et sereinement ses mots de passe, c’est facile&nbsp;!</p>
+
+                    <p>Cette conférence s’adresse à du grand public, le but est de vulgariser, pas d’être exhaustif. Des
+                        experts qui assisteraient à cette conférence risqueraient d’être frustrés ;)</p>
+
+                </div>
+            </div>
+        </td>
+        <td data-day="1" rowspan="2">
+            <div class="event talk">
+                <div class="time">
+                    17:00 - 18:00
+                </div>
+                <div class="title">
+                    De l’avenir de l’expérience utilisateur.
+                </div>
+                <div class="author">
+                    iErgo
+                </div>
+                <div class="description">
+                    <p>Ça fait un moment que je me pose ces questions.
+                        Comment va évoluer mon métier&nbsp;?
+                        Quelles sont les tendances qui vont émerger&nbsp;?
+                        L’idée est pour moi de détecter les signaux faibles, de voir l’évolution du métier dans les
+                        années à venir.</p>
+
+                    <p>Pour ça, j’ai commencé par synthétiser ma veille et mes idées principales sous la forme d’un
+                        mind-mapping et ensuite je suis allé confronter mes idées avec diverses personnes du monde du
+                        design et de l’UX.
+                        Je me propose de vous partager le résultat de cette enquête.</p>
+
+                </div>
+            </div>
+        </td>
+        <td rowspan="2">
+            <div class="event talk">
+                <div class="time">
+                    17:00 - 18:00
+                </div>
+                <div class="title">
+                    Quel est ton film d’horreur préféré&nbsp;?
+                </div>
+                <div class="author">
+                    Tris
+                </div>
+                <div class="description">
+                    <p>Genre longtemps moqué et snobé, le cinéma d’horreur est le secteur le plus riche mais aussi le
+                        plus dérangeant du 7ᵉ art.
+                        Il nous montre tout ce qu’on ne souhaite pas voir, ni entendre, ni comprendre.
+                        Parfois, il met en scène des monstres mais la plupart du temps, c’est nous-mêmes qui sommes les
+                        acteurs.</p>
+
+                    <p>Que dit-il de nous&nbsp;?
+                        De notre environnement&nbsp;?
+                        De nos craintes&nbsp;?
+                        Quelles sont les fonctions du cinéma d’horreur&nbsp;?</p>
+
+                    <p>Plongez dans vos pires cauchemars et ressortez-en terrifiés.</p>
+
+                </div>
+            </div>
+        </td>
+        <td rowspan="2">
+            <div class="event talk">
+                <div class="time">
+                    17:00 - 18:00
+                </div>
+                <div class="title">
+                    Biopanique, cuisine et streethack
+                </div>
+                <div class="author">
+                    XavCC
+                </div>
+                <div class="description">
+                    <p>De la cuisine libre ta vie privée tu protègeras.
+                        Les identités biologiques nous en héritons, des traces bio nous en laissons partout, nos
+                        caractéristiques morphologiques sont capturées.</p>
+
+                    <p>Face, œil, empreintes, veines de la main, la marche, l’ADN…
+                        Et biome bactérien. Vous êtes plus de bactéries que vous n’en êtes humain… Humanités
+                        bactériennes.</p>
+
+                    <p>Fichages d’État, collectes de données privatisées et compréhension de leurs valeurs de contrôle
+                        social, persistances des données&nbsp;; brevetabilité et imprescriptibilité du vivant…</p>
+
+                    <p>Viens on y fout le bordel du serveur à la rue&nbsp;!</p>
+
+                </div>
+            </div>
+        </td>
+        <td rowspan="2">
+            <div class="event talk">
+                <div class="time">
+                    17:00 - 18:00
+                </div>
+                <div class="title">
+                    Moins de libertés, moins de fun
+                </div>
+                <div class="author">
+                    Arthur Messaud
+                </div>
+                <div class="description">
+                    <p>Vous vous souvenez quand on disait&nbsp;: «&nbsp;Si on ne s’oppose pas à cette loi, elle sera
+                        utilisée demain pour tous nous censurer&nbsp;»&nbsp;?
+                        Nous sommes demain.</p>
+
+                    <p>L’époque où La Quadrature du Net s’en prenait à ses adversaires à coup d’images rigolotes et de
+                        chats est lointaine.
+                        Aujourd’hui, notre quotidien est fait de prétexte «&nbsp;terroriste&nbsp;», de répression
+                        policière, d’alliance entre l’État et les GAFAM, d’encore pires États privés.</p>
+
+                    <p>Certes, Internet offre encore un paquet d’espoirs d’émancipation, d’utopies concrètes, de belles
+                        voies de sortie…
+                        Mais nous n’en parlerons pas ici.
+                        Nous ne venons que pour maudire et jurer.</p>
+
+                </div>
+            </div>
+        </td>
+        <td rowspan="2">
+            <div class="event workshop">
+                <div class="time">
+                    17:00 - 18:00
+                </div>
+                <div class="title">
+                    Initiation à MuseScore
+                </div>
+                <div class="author">
+                    skunt
+                </div>
+                <div class="description">
+                    <p>Atelier d’initiation ouvert à toute personne ayant quelques notions
+                        de musique.</p>
+
+                    <p>Prise en main du logiciel&nbsp;:</p>
+
+                    <ul>
+                        <li>Rapide tour du propriétaire</li>
+                        <li>Fonctions de base pour saisir une partition simple</li>
+                        <li>Partition complexe (conducteurs, parties séparées…)</li>
+                        <li>Playback, export graphique ou audio</li>
+                        <li>Interactions avec d’autres logiciels libres (LibreOffice, Inkscape…)</li>
+                    </ul>
+
+                </div>
+            </div>
+        </td>
+        <td rowspan="2">
+            <div class="event talk">
+                <div class="time">
+                    17:00 - 18:00
+                </div>
+                <div class="title">
+                    Smartphone&nbsp;: peut-on utiliser uniquement F-droid comme store d’application&nbsp;?
+                </div>
+                <div class="author">
+                    Zenzla
+                </div>
+                <div class="description">
+                    <p>Bilan de 3 ans avec uniquement F-droid comme store d’application.</p>
+
+                    <p>Depuis mars 2015, j’utilise comme seul store-alternative F-droid, et seules les applications 100%
+                        libres ont eu le droit d’installation sur mon smartphone.
+                        3 ans avec des avantages et des inconvenants.</p>
+
+                    <p>Aujourd’hui, j’ai mis fin à cette expérience et je retourne vers une utilisation dite «&nbsp;normale/majoritaire&nbsp;»
+                        du smartphone.
+                        Quel est le bilan de ces trois années d’expérience&nbsp;?
+                        Pourquoi avoir pris cette décision&nbsp;?
+                        Pourquoi y mettre fin aujourd’hui&nbsp;?</p>
+
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <th class="hidden">17:30</th>
+    </tr>
+    <tr>
+        <th>18:00</th>
+        <td data-day="1" rowspan="2">
+            <div class="event talk">
+                <div class="time">
+                    18:00 - 19:00
+                </div>
+                <div class="title">
+                    ActivityPub, l’épine dorsale du fédivers, ça marche comment&nbsp;?
+                </div>
+                <div class="author">
+                    Stéphane Bortzmeyer
+                </div>
+                <div class="description">
+                    <p>Le fédivers, ensemble de serveurs qui échangent des informations de
+                        manière décentralisée, est un grand succès et, chaque jour, on annonce un nouveau logiciel qui «&nbsp;parle
+                        ActivityPub&nbsp;».</p>
+
+                    <p>Quel est ce protocole&nbsp;? Comment marche-t-il&nbsp;? Quel rôle joue-t-il&nbsp;? C’est vraiment
+                        lui qui fait tout&nbsp;? Quels sont ses avantages,
+                        ses limites et ses problèmes&nbsp;?</p>
+
+                    <p>Cette conférence vise un public plutôt informaticien.
+                        Du code-source défilera sur l’écran.</p>
+
+                </div>
+            </div>
+        </td>
+        <td data-day="1" rowspan="2">
+            <div class="event talk">
+                <div class="time">
+                    18:00 - 19:00
+                </div>
+                <div class="title">
+                    Préservation du patrimoine numérique&nbsp;: le cas du Minitel
+                </div>
+                <div class="author">
+                    cquest
+                </div>
+                <div class="description">
+                    <p>Le monde numérique a aussi son patrimoine, matériel et immatériel.
+                        Sa préservation est délicate car hardware et software sont souvent interdépendants et leur
+                        conservation n’a pas toujours été identifiée comme importante.
+                        Le matériel spécifique, propriétaire, les logiciels protégés, sans sources disponibles sont
+                        délicats à préserver.
+                        Cette présentation prendra le cas d’un domaine où la page a été vite tournée&nbsp;: le Minitel
+                        Que reste-t-il de visible, opérationnel&nbsp;?
+                        Comment remettre en route des services vidéotex pour montrer l’interactivité&nbsp;?
+                        l’exemple de quelques restaurations sur Apple II ou Macintosh (68k) sera abordé.</p>
+
+                </div>
+            </div>
+        </td>
+        <td rowspan="2">
+            <div class="event talk">
+                <div class="time">
+                    18:00 - 19:00
+                </div>
+                <div class="title">
+                    L’Internet pour lequel on se bat
+                </div>
+                <div class="author">
+                    Okhin
+                </div>
+                <div class="description">
+                    <p>LQDN se bat depuis 10 ans pour un internet commun et libre.
+                        Mais qu’est-ce que cela signifie exactement alors que le web subit de nombreux changements et
+                        bouleversements&nbsp;?
+                        À quoi sert-il encore de vouloir exister hors des réseaux sociaux hégémoniques à l’heure ou nous
+                        sommes de plus en plus connectés via divers appareils dont nous perdons progressivement le
+                        contrôle&nbsp;?</p>
+
+                    <p>Dans cette conférence, nous présenterons notre version positive d’internet, de celui que nous
+                        voulons et non de celui que nous subissons.
+                        Un internet commun, distribué et encourageant la contribution, créant des constellations de
+                        communautés pouvant survivre à la chute des GAFAM.</p>
+
+                </div>
+            </div>
+        </td>
+        <td rowspan="4">
+            <div class="event workshop">
+                <div class="time">
+                    18:00 - 20:00
+                </div>
+                <div class="title">
+                    Cuisine des pirates&nbsp;: Bactéries et levures contre g00gle
+                </div>
+                <div class="author">
+                    XavCC
+                </div>
+                <div class="description">
+                    <p>Après les idiot⋅e⋅s du Village g00gle, voici le temps de la libuste arrivé&nbsp;!</p>
+
+                    <p>Faire des levures de boulangeries à partir de pomme de terre, oui oui oui.
+                        Tu pourras apprivoiser les Saccharomyces cerevisiae pour faire des recettes libres
+                        #Fuckoffgoogle sous AGPL pour nourrir les troupes.</p>
+
+                    <p>Du papier à partir de levures et de bactéries&nbsp;? Oui, oui, oui.
+                        Tu pourras envoyer des courriers (gravé au laser&nbsp;?) #fuckoffgoogle de demande de paiement
+                        de leurs amendes ou impôts ou rappel du RGPD.</p>
+
+                    <p>OU alors tu boiras du Kombucha</p>
+
+                </div>
+            </div>
+        </td>
+        <td rowspan="2">
+            <div class="event talk">
+                <div class="time">
+                    18:00 - 19:00
+                </div>
+                <div class="title">
+                    Recherche et militantisme, entre divergence et alliance
+                </div>
+                <div class="author">
+                    Vi et Astrid
+                </div>
+                <div class="description">
+                    <p>Universitaires et militants semblent à la fois alliés et distants.
+                        Pourtant, ces deux milieux ont l’objectif commun de comprendre et changer le monde.
+                        Ils ont tous les deux un impact sur l’exercice de nos libertés sur Internet.
+                        Mais comment s’influencent-ils&nbsp;?</p>
+
+                    <p>Avec notre vécu de doctorantes, nous explorerons les belles collaborations et les surprenantes
+                        dissonances entre ces deux univers.
+                        Nous évoquerons aussi les difficultés de conciliation des identités de chercheur·se
+                        et de militant·e.</p>
+
+                </div>
+            </div>
+        </td>
+        <td rowspan="2">
+            <div class="event workshop">
+                <div class="time">
+                    18:00 - 19:00
+                </div>
+                <div class="title">
+                    Si on discutait ensemble des compromis que nécessite la sécurité informatique&nbsp;?
+                </div>
+                <div class="author">
+                    Stéphane Bortzmeyer
+                </div>
+                <div class="description">
+                    <p>Pour citer Bruce Schneier, «&nbsp;la sécurité est toujours un compromis&nbsp;».
+                        Il y a un compromis à faire entre certains services de sécurité, mais aussi entre sécurité et
+                        d’autres choses qu’on souhaite avoir, comme la liberté.
+                        La relation entre sécurité et liberté est complexe&nbsp;: sans sécurité, on n’est pas vraiment
+                        en liberté mais, d’un autre côté, sans liberté, à quoi sert la sécurité&nbsp;?
+                        Le cas de la sécurité informatique est d’autant plus intéressant que les mesures de sécurité
+                        sont souvent présentées comme purement techniques, sans discuter de leur impact sur les libertés
+                        («&nbsp;firewall, démission&nbsp;!&nbsp;»&nbsp;?)</p>
+
+                    <p>Cet atelier a pour but de discuter de ces compromis, et de voir s'il est possible d’analyser les
+                        mesures de sécurité informatique, en tenant compte de leur impact sur les libertés.</p>
+
+                    <p>Parmi les sujets&nbsp;possibles&nbsp;: résolveurs DNS menteurs bloquant le malware, NAT et
+                        pare-feux, navigateurs Web avertissant des sites dangereux, etc.</p>
+
+                    <p>(On parle bien de sécurité informatique, pas des mesures purement liberticides, comme la
+                        censure.)</p>
+
+                </div>
+            </div>
+        </td>
+        <td rowspan="2">
+            <div class="event talk">
+                <div class="time">
+                    18:00 - 19:00
+                </div>
+                <div class="title">
+                    Algorithmes&nbsp;: Minority Report est-il vraiment une fiction&nbsp;?
+                </div>
+                <div class="author">
+                    Bastien Le Querrec
+                </div>
+                <div class="description">
+                    <p>Les algorithmes sont partout autour de nous.
+                        Sans que nous en ayons vraiment conscience, ils dictent nos vies. En matière de police et de
+                        justice, les algorithmes sont également omniprésents.</p>
+
+                    <p>Il s’agira alors de comparer l’œuvre de Philip K. Dick avec le présent, et mettre en lumière le
+                        fait que ce que nous pensons être de la science-fiction ne l’est pas tout à fait.</p>
+
+                </div>
+            </div>
+        </td>
+        <td rowspan="2">
+            <div class="event workshop">
+                <div class="time">
+                    18:00 - 19:00
+                </div>
+                <div class="title">
+                    Auto-hébergement et virtualisation avec KVM
+                </div>
+                <div class="author">
+                    Zenzla
+                </div>
+                <div class="description">
+                    <p>Pour se libérer de l’emprise des GAFAM et de leurs politiques intrusives et non respectueuses de
+                        la vie privée, beaucoup de ceux qui ont des connaissances techniques, privilégient
+                        l’auto-hébergement.</p>
+
+                    <p>Mais rapidement on se rend compte que la multitude d’applications à héberger (cloud, site web,
+                        mail, test…) nécessite beaucoup plus qu’une simple machine faisant office de serveur unique.</p>
+
+                    <p>La
+                        solution à cette problématique est la virtualisation&nbsp;!
+                        C’est ce que j’ai mis en place depuis plus d’un an avec KVM, même si je suis en rien un
+                        spécialiste en virtualisation.
+                        Nous verrons qu’il n’est pas nécessaire d’avoir une infra à K€ pour réaliser ce projet.</p>
+
+                    <p>C’est le retour de ma modeste expérience que j’exposerai lors de cette conférence.</p>
+
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <th class="hidden">18:30</th>
+    </tr>
+    <tr>
+        <th>19:00</th>
+        <td data-day="1" rowspan="2">
+            <div class="event talk">
+                <div class="time">
+                    19:00 - 20:00
+                </div>
+                <div class="title">
+                    La sécurité web pour les nuls, par une nulle
+                </div>
+                <div class="author">
+                    Aude
+                </div>
+                <div class="description">
+                    <p>Je suis ingénieur front et non une experte de la sécurité.
+                        Pour apprendre, j’ai décidé de me renseigner sur le sujet et de réaliser une présentation
+                        (d’abord faites en interne).
+                        Je me suis concentrée sur le navigateur et ses échanges avec le serveur.</p>
+
+                    <p>Je parle ainsi de</p>
+
+                    <ul>
+                        <li>Cross-Site Scripting (XSS)</li>
+                        <li>Cross-Site Request forgery (CSRF)</li>
+                        <li>Man in the middle (explication de certaines bases en réseau, l’objectif étant de comprendre
+                            ce que signifie HTTPS)
+                        </li>
+                    </ul>
+
+                    <p>Cette conférence est à destination de développeurs web ou de personnes très à l’aise sur le
+                        fonctionnement interne d’un site internet.</p>
+
+                </div>
+            </div>
+        </td>
+        <td data-day="1" rowspan="2">
+            <div class="event talk">
+                <div class="time">
+                    19:00 - 20:00
+                </div>
+                <div class="title">
+                    MirageOS, a smaller and safer operating system
+                </div>
+                <div class="author">
+                    Dinosaure
+                </div>
+                <div class="description">
+                    <p>MirageOS aims to provide a framework to create an operating system specialized in the task
+                        desired by the developper.
+                        For that reason, the project is articulated with several tools such as libraries implementing
+                        the different layers, interfaces for composing these implementations, and a compiler assembling
+                        all of these according to a manifest.
+                        In this perspective, the design of a functional OS becomes easier and is similar to construct
+                        something with LEGO.</p>
+
+                </div>
+            </div>
+        </td>
+        <td></td>
+        <td rowspan="2">
+            <div class="event talk">
+                <div class="time">
+                    19:00 - 20:00
+                </div>
+                <div class="title">
+                    Pourquoi parler de politique sur Youtube en 2019&nbsp;?
+                </div>
+                <div class="author">
+                    Alexandre Troël-Guy
+                </div>
+                <div class="description">
+                    <p>Affaire Fillon, Pacte de Marrakech, Traité d’Aix-La-Chapelle…
+                        Les exemples de Fake News virales n’ont pas manqué quand il s’agit de dénoncer les institutions
+                        et acteurs politiques.</p>
+
+                    <p>Et ça n’a pas été sans énerver quelques geeks férus de politiques qui ont créé Whip., une chaîne
+                        Youtube expliquant chaque semaine le fonctionnement de ce joyeux bordel, chose peu recommandée
+                        par le Ministère de la Santé.</p>
+
+                    <p>Ces joyeux lurons vous proposent de venir à PSES pour expliquer leur démarche.</p>
+
+                </div>
+            </div>
+        </td>
+        <td rowspan="2">
+            <div class="event talk">
+                <div class="time">
+                    19:00 - 20:00
+                </div>
+                <div class="title">
+                    Lisibilité et lecture sur le web
+                </div>
+                <div class="author">
+                    hiwelo
+                </div>
+                <div class="description">
+                    <p>(en attente de confirmation)</p>
+
+                </div>
+            </div>
+        </td>
+        <td>
+            <div class="event talk">
+                <div class="time">
+                    19:00 - 19:30
+                </div>
+                <div class="title">
+                    Monter un CHATONS étudiant durable
+                </div>
+                <div class="author">
+                    fallstar
+                </div>
+                <div class="description">
+                    <p>Déjà plus de 60 naissances de CHATONS en 30 mois… Mais comment pérenniser une association dont
+                        les membres changent tous les six mois, tout en essaimant ses savoir-faire&nbsp;?</p>
+
+                    <p>Picasoft, un CHATONS étudiant de Picardie, s’est donné
+                        trois missions&nbsp;: hébergement, évangélisation et formation</p>
+
+                    <p>Nous en ferons un tour d’horizon&nbsp;: gouvernance, infrastructure, sécurité, automatisation,
+                        partage des connaissances, sensibilisation aux enjeux du numérique, formation à des technologies
+                        saines et hébergement de services libres.</p>
+
+                </div>
+            </div>
+        </td>
+        <td rowspan="4"></td>
+    </tr>
+    <tr>
+        <th class="hidden">19:30</th>
+        <td>
+            <div class="event talk">
+                <div class="time">
+                    19:30 - 20:00
+                </div>
+                <div class="title">
+                    Coder pour quel futur&nbsp;?
+                </div>
+                <div class="author">
+                    Richard Hanna
+                </div>
+                <div class="description">
+                    <p>Des scient/fiques estiment que l’effondrement de notre civilisation est imminente voire qu’elle a
+                        déjà commencé.
+                        Par exemple 60% de la population animale a disparu depuis 1970. Le manque d’eau et de pétrole
+                        génère des tensions.</p>
+
+                    <p>Comment à notre niveau, gens de la tech, contribuer à réduire notre impact sur l’environnement
+                        dans notre façon de travailler et de vivre au quotidien&nbsp;?</p>
+
+                </div>
+            </div>
+        </td>
+        <td>
+            <div class="event misc">
+                <div class="time">
+                    19:30 - 20:00
+                </div>
+                <div class="title">
+                    Clôture du festival
+                </div>
+                <div class="author">
+                    Équipe Pas Sage en Seine
+                </div>
+                <div class="description">
+
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <th>20:00</th>
+        <td data-day="1" rowspan="2">
+            <div class="event talk">
+                <div class="time">
+                    20:00 - 21:00
+                </div>
+                <div class="title">
+                    Software Heritage&nbsp;: la Grande Bibliothèque du logiciel
+                </div>
+                <div class="author">
+                    douardda
+                </div>
+                <div class="description">
+                    <p>Ou encore pourquoi et comment préserver le patrimoine logiciel de l’Humanité.</p>
+
+                    <p>Lancé il y a maintenant quatre ans, Software Heritage est un projet ambitieux d’archivage de tous
+                        les codes sources des logiciels.
+                        Initiée par Roberto Di Cosmo et soutenue par l’INRIA, l’archive Software Heritage a été
+                        officiellement ouverte au public en juin dernier, à l’UNESCO.</p>
+
+                    <p>Dans cette présentation, je vous propose d’en expliquer les objectifs, mais aussi de montrer
+                        comment fonctionne techniquement la plate-forme.</p>
+
+                </div>
+            </div>
+        </td>
+        <td data-day="1" rowspan="2"></td>
+        <td rowspan="2">
+            <div class="event talk">
+                <div class="time">
+                    20:00 - 21:00
+                </div>
+                <div class="title">
+                    Le Prix du Gratuit
+                </div>
+                <div class="author">
+                    Emmanuel Revah
+                </div>
+                <div class="description">
+                    <p>Les services en lignes contournable se définissent comme étant «&nbsp;gratuit&nbsp;», mais on
+                        sait bien qu’on paie via la publicité et nos données. Mais jusqu’où ça va&nbsp;? À quel point
+                        cela est acceptable&nbsp;?</p>
+
+                    <p>Nous verrons la mécanique du mode de paiement «&nbsp;gratuit&nbsp;» ainsi que quelques techniques
+                        pour optimiser tout cela.
+                        On verra jusqu’où ou ce modèle économique s’étend et quelques exemples des données qui
+                        intéressent les entreprises de forages de données.</p>
+
+                    <p>On verra aussi de quelques pistes pour pratiquer Internet plus sainement, entre extensions pour
+                        navigateur jusqu’au fournisseur de courriels éthiques, avec un détour par les réseaux sociaux
+                        libres et décentralisés.</p>
+
+                    <p>Mieux comprendre le prix des services dit «&nbsp;gratuit&nbsp;» nous permet de mieux choisir en
+                        fonction de nos besoins, envies, moyens et valeurs.</p>
+
+                </div>
+            </div>
+        </td>
+        <td rowspan="2"></td>
+        <td rowspan="2">
+            <div class="event talk">
+                <div class="time">
+                    20:00 - 21:00
+                </div>
+                <div class="title">
+                    Du plaisir de lutter ensemble&nbsp;: refonder nos liens associatifs
+                </div>
+                <div class="author">
+                    quota_atypique
+                </div>
+                <div class="description">
+                    <p>Pourquoi lutte-t-on&nbsp;?
+                        Pourquoi continue-t-on à lutter (malgré la morosité ambiante, l’effondrement, la fatigue)&nbsp;?
+                        Probablement parce qu’on a plaisir à lutter ensemble.</p>
+
+                    <p>Cette présentation-manifeste vise à donner quelques pistes de
+                        réflexion sur le bénévolat, et la société qu’on construit dans nos espaces associatifs.</p>
+
+                </div>
+            </div>
+        </td>
+        <td rowspan="2"></td>
+        <td rowspan="2"></td>
+    </tr>
+    <tr>
+        <th class="hidden">20:30</th>
+    </tr>
+    </tbody>
+</table>
+</body>
+
+<script>
+  function hideOtherDays(day) {
+    const toRemoveClass = document.querySelectorAll(`.navigation__item:not(:nth-of-type(${day})) .navigation__select`);
+    const toHide = document.querySelectorAll(`td:not([data-day="${day}"]), th:not([data-day="${day}"])`);
+    toHide && toHide.forEach((item) => {
+      item.style.display = 'none';
+    });
+
+    toRemoveClass && toRemoveClass.forEach((item) => {
+      item.classList.remove('navigation__select--selected');
+    });
+  }
+
+  function selectDay(day) {
+    document.querySelector(`.navigation__item:nth-of-type(${day}) .navigation__select`).classList.add('navigation__select--selected');
+
+    const toShow = document.querySelectorAll(`td[data-day="${day}"], th[data-day="${day}"]`);
+    toShow && toShow.forEach((item) => {
+      item.style.display = 'table-cell';
+    });
+  }
+
+  function displayDay(day = 1) {
+    if (window.innerWidth > 1200) {
+      return;
+    }
+    hideOtherDays(day);
+    selectDay(day);
+  }
+
+  // TODO: TEST IF CURRENT DAY === ONE DAY of the EVENTS
+  displayDay();
+</script>
+</html>

@@ -1,6 +1,6 @@
 class TimeTable
 	constructor: (@element, @modal, @navigation) ->
-		events = @element.querySelectorAll 'tbody td > .event'
+		events = @element.querySelectorAll 'tbody td .event__toggleBtn'
 		for event in events
 			# JS scoping hell…
 			event.addEventListener 'click', ((_this, _event) ->
@@ -68,6 +68,7 @@ class Modal
 		@body = @modal.querySelector '.body'
 		@modal.querySelector('.close').addEventListener 'click', @close
 		@modal.querySelector('.cover').addEventListener 'click', @close
+		@originFocus = undefined;
 
 	act: (events) ->
 		wrapper = =>
@@ -113,20 +114,27 @@ class Modal
 
 		header_width = Math.round modal.width / 3
 
-		time = @event.querySelector('.time').textContent
+		@originFocus = @event;
+		@modal.querySelector('.close').focus()
+
+		time = @event.parentElement.querySelector('.time').textContent
 		@header.querySelector('.time').textContent = time
-		title = @event.querySelector('.title').textContent
+		type = @event.parentElement.querySelector('.type').textContent
+		@header.querySelector('.type').textContent = type
+		place = @event.parentElement.getAttribute('data-place')
+		@header.querySelector('.place').textContent = place
+		title = @event.parentElement.querySelector('.title').getAttribute('data-fullTitle')
 		@header.querySelector('.title').textContent = title
-		author = @event.querySelector('.author').textContent
+		author = @event.parentElement.querySelector('.author').textContent
 		@header.querySelector('.author').textContent = author
-		description = @event.querySelector('.description').innerHTML
+		description = @event.parentElement.querySelector('.description').innerHTML
 		@body.innerHTML = ''
 
 		@modal.classList.remove 'transition'
 		@act [
 			[20, =>
 				@start()
-				@header.classList = @event.classList
+				@header.classList = @event.parentElement.classList
 				@header.classList.add 'header'
 				@modal.style.opacity = 1
 				@modal.classList.remove 'hidden'
@@ -154,6 +162,7 @@ class Modal
 
 				@body.innerHTML = ''
 				@start()
+				@originFocus.focus()
 			]
 		]
 

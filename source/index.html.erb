@@ -186,6 +186,7 @@
 			%>
 			<% columns.each_with_index do |column, index|
 				events = column[:events]
+				location = column[:location]
 				event = events.first
 				if event
 					from, to, height, placeholder = event.values_at :from, :to, :height, :placeholder
@@ -198,19 +199,22 @@
 					%>
 				<% unless event[:placeholder]
 					   content_tag :td, **attributes do %>
-						<% content_tag :article, class: "event #{event[:type]}" do %>
+						<% content_tag :article, class: "event #{event[:type]}", :data => { :place => location } do %>
 							<div class="time">
-								<%= to_time from %> – <%= to_time to %>
+								<time datetime="<%= to_time from %>"><%= to_time from %></time> – <time datetime="<%= to_time to %>"><%= to_time to %></time>
 							</div>
 						  <div class="type">
                   <%= label_type(event[:type]) %>
               </div>
-							<div class="title">
-								<%= event[:title] %>
+							<div class="title" data-fullTitle="<%= event[:title] %>">
+								<%= truncate(event[:title], :length => 40) %>
 							</div>
 							<div class="author">
 								<%= event[:author] %>
 							</div>
+							<button class="event__toggleBtn" aria-label="Description complète de '<%= event[:title] %>'">
+							  +
+							</button>
 							<div class="description">
 								<%=
 									description = event[:description]
@@ -230,14 +234,23 @@
 	</tbody>
 </table>
 
-<div class="modal hidden">
+<div class="modal hidden" role="dialog" aria-describedby="modalTitle">
+  <button class="close"><span class="visually-hidden">Fermer la description complète</span></button>
 	<header class="header">
-		<div class="time"></div>
-		<div class="title"></div>
-		<div class="author"></div>
+	  <dl>
+	    <dt>Horaires:</dt>
+	      <dd class="time"></dd>
+	    <dt>Type:</dt>
+        <dd class="type"></dd>
+      <dt>Salle:</dt>
+        <dd class="place"></dd>
+      <dt>Nom:</dt>
+        <dd class="title"></dd>
+      <dt>Auteur/Autrice:</dt>
+        <dd class="author"></dd>
+	  </dl>
 	</header>
 	<div class="body"></div>
-	<div class="close"></div>
 	<div class="cover"></div>
 </div>
 </main>

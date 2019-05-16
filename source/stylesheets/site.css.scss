@@ -182,7 +182,6 @@ table.timetable {
 				//display: inline-table;
 				padding: 10px;
 
-				cursor: pointer;
 				// text-align: justify;
 				overflow: hidden;
 			}
@@ -215,7 +214,7 @@ ul.legend {
 }
 
 .title {
-  font-size: 2rem;
+  font-size: 1.8rem;
   margin-bottom: 8px;
 }
 
@@ -226,6 +225,25 @@ ul.legend {
 
 .author {
 	text-align: right;
+	margin-bottom: 8px;
+}
+
+.event__toggleBtn {
+	padding: 4px 8px;
+	font-family: $serif;
+	background: transparent;
+	color: #fff;
+	border: 1px solid #fff;
+	position: absolute;
+	bottom: 12px;
+	width: calc(100% - 18px);
+	text-align: center;
+	display: block;
+
+	&:hover,
+	&:focus {
+		border-style: dashed;
+	}
 }
 
 .time,
@@ -328,8 +346,20 @@ ul.legend {
 		}
 	}
 
-	.header, .body, .close {
+	.header, .body {
 		z-index: 3;
+	}
+
+	.close {
+		background: none;
+		z-index: 4;
+		border: 1px solid transparent;
+
+		&:hover,
+		&:focus {
+			border: 1px dashed #000;
+			outline: 1px solid rebeccapurple;
+		}
 	}
 
 	.cover {

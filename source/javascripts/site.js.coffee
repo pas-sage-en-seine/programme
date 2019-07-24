@@ -1,13 +1,64 @@
 class TimeTable
-	constructor: (@element, @modal) ->
-		events = @element.querySelectorAll 'tbody td > div'
+	constructor: (@element, @modal, @navigation) ->
+		events = @element.querySelectorAll 'tbody td .event__toggleBtn'
 		for event in events
 			# JS scoping hell…
 			event.addEventListener 'click', ((_this, _event) ->
 				-> _this.modal.open _event
 			)(this, event)
 
+		btnsSelect = @navigation.querySelectorAll '.navigation__select'
+		for btn in btnsSelect
+		# JS scoping hell…
+			btn.addEventListener 'click', ((_thisbtn, _eventbtn) ->
+				-> _thisbtn.displayDay _eventbtn
+			)(this, btn)
+
 	init: () ->
+		window.addEventListener 'resize', @displayDay()
+		@displayDay();
+
+	hideOtherDays: (day) ->
+			toRemoveClass = document.querySelectorAll ".navigation__item:not(:nth-of-type(#{ day })) .navigation__select"
+			toHide = document.querySelectorAll "td:not([data-col='#{ day }']), th:not([data-col='#{ day }'])";
+			toHideCol = document.querySelectorAll "colgroup:not(:nth-of-type(#{ Number(day) + 1 })";
+
+			for hide in toHide
+				hide.style.display = 'none'
+
+			for col in toHideCol
+				col.style.display = 'none'
+
+			for remove in toRemoveClass
+				remove.classList.remove('navigation__select--selected');
+				remove.setAttribute('aria-expanded', false);
+
+
+	selectDay: (day) ->
+		document.querySelector(".navigation__item:nth-of-type(#{ day }) .navigation__select").classList.add "navigation__select--selected";
+		document.querySelector(".navigation__item:nth-of-type(#{ day }) .navigation__select").setAttribute("aria-expanded", true);
+		document.querySelector("colgroup:nth-of-type(#{ Number(day) + 1 })").style.display = 'table-column-group';
+		toShow = document.querySelectorAll "td[data-col='#{ day }'], td[data-col='#{ Number(day) + 1 }'], th[data-day='#{ day }']";
+		for show in toShow
+			show.style.display = 'table-cell'
+
+	displayAllDays: () ->
+		toShow = document.querySelectorAll "td, th";
+		for show in toShow
+			show.style.display = 'table-cell'
+
+
+	displayDay: (btn) ->
+		if window.innerWidth > 1200
+			@displayAllDays()
+			return
+
+		day = 1;
+		if (btn)
+			day = btn.getAttribute('data-day')
+
+		@hideOtherDays(day);
+		@selectDay(day) 	# TODO: (IMPROVEMENT) TEST IF CURRENT DAY === ONE DAY of the EVENT
 
 class Modal
 	size: { width: 800, height: 480 }
@@ -17,6 +68,7 @@ class Modal
 		@body = @modal.querySelector '.body'
 		@modal.querySelector('.close').addEventListener 'click', @close
 		@modal.querySelector('.cover').addEventListener 'click', @close
+		@originFocus = undefined;
 
 	act: (events) ->
 		wrapper = =>
@@ -62,20 +114,27 @@ class Modal
 
 		header_width = Math.round modal.width / 3
 
-		time = @event.querySelector('.time').textContent
+		@originFocus = @event;
+		@modal.querySelector('.close').focus()
+
+		time = @event.parentElement.querySelector('.time').textContent
 		@header.querySelector('.time').textContent = time
-		title = @event.querySelector('.title').textContent
+		type = @event.parentElement.querySelector('.type').textContent
+		@header.querySelector('.type').textContent = type
+		place = @event.parentElement.getAttribute('data-place')
+		@header.querySelector('.place').textContent = place
+		title = @event.parentElement.querySelector('.title').getAttribute('data-fullTitle')
 		@header.querySelector('.title').textContent = title
-		author = @event.querySelector('.author').textContent
+		author = @event.parentElement.querySelector('.author').textContent
 		@header.querySelector('.author').textContent = author
-		description = @event.querySelector('.description').innerHTML
+		description = @event.parentElement.querySelector('.description').innerHTML
 		@body.innerHTML = ''
 
 		@modal.classList.remove 'transition'
 		@act [
 			[20, =>
 				@start()
-				@header.classList = @event.classList
+				@header.classList = @event.parentElement.classList
 				@header.classList.add 'header'
 				@modal.style.opacity = 1
 				@modal.classList.remove 'hidden'
@@ -103,6 +162,7 @@ class Modal
 
 				@body.innerHTML = ''
 				@start()
+				@originFocus.focus()
 			]
 		]
 
@@ -119,24 +179,15 @@ class Modal
 
 class Giggity
 	@init: ->
-		giggity_logo = document.querySelector '.giggity .logo'
-		position = giggity_logo.getBoundingClientRect()
-		giggity_qrcode = document.querySelector '.giggity .qrcode'
-		giggity_qrcode.style.top = "#{position.bottom + 20}px"
-		giggity_qrcode.style.left = "#{position.right + 20}px"
-
-		giggity_logo.addEventListener 'mouseenter', ->
-			giggity_qrcode.classList.remove 'hidden'
-		giggity_logo.addEventListener 'mouseleave', ->
-			giggity_qrcode.classList.add 'hidden'
 
 
 init = ->
 	modal = new Modal document.querySelector '.modal'
+	navigation = document.querySelector '.navigation'
 
 	tables = document.querySelectorAll 'table.timetable'
 	for table in tables
-		new TimeTable(table, modal).init()
+		new TimeTable(table, modal, navigation).init()
 
 	Giggity.init()
 
